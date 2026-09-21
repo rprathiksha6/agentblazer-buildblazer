@@ -4,9 +4,9 @@ import { INITIAL_NOTIFICATIONS, INITIAL_DOUBTS, INITIAL_SUBMISSIONS } from '../d
 const ClubContext = createContext();
 
 export const ClubProvider = ({ children }) => {
-  // Theme state: 'violet' | 'inferno' | 'frost'
+  // Theme state: 'dark' | 'light'
   const [theme, setThemeState] = useState(() => {
-    return localStorage.getItem('agentblazer_theme') || 'violet';
+    return localStorage.getItem('agentblazer_theme_mode') || 'dark';
   });
 
   // Portal view: 'student' | 'admin'
@@ -32,13 +32,19 @@ export const ClubProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : INITIAL_SUBMISSIONS;
   });
 
-  // Active section for navigation highlighting
   const [activeSection, setActiveSection] = useState('home');
 
   // Sync theme to document element
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('agentblazer_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('agentblazer_theme_mode', theme);
   }, [theme]);
 
   // Sync storage
@@ -60,6 +66,10 @@ export const ClubProvider = ({ children }) => {
 
   const setTheme = (newTheme) => {
     setThemeState(newTheme);
+  };
+
+  const toggleTheme = () => {
+    setThemeState(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   const setPortalView = (view) => {
@@ -146,6 +156,7 @@ export const ClubProvider = ({ children }) => {
     <ClubContext.Provider value={{
       theme,
       setTheme,
+      toggleTheme,
       portalView,
       setPortalView,
       notifications,
