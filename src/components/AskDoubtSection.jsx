@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useClub } from '../context/ClubContext';
-import { HelpCircle, Send, CheckCircle2, ShieldAlert, Sparkles, Clock, MessageCircle, User } from 'lucide-react';
+import { HelpCircle, Send, CheckCircle2, ShieldCheck, Sparkles, Clock, MessageCircle, Lock, UserX } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export const AskDoubtSection = () => {
   const { doubts, addDoubt } = useClub();
 
+  const [isAnonymous, setIsAnonymous] = useState(true);
   const [form, setForm] = useState({
     studentName: '',
     usn: '',
@@ -22,9 +23,17 @@ export const AskDoubtSection = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.studentName || !form.usn || !form.email || !form.query) return;
+    if (!form.query) return;
 
-    const created = addDoubt(form);
+    const submissionData = {
+      ...form,
+      studentName: isAnonymous ? 'Anonymous Student' : (form.studentName.trim() || 'Anonymous Student'),
+      usn: isAnonymous ? 'CONFIDENTIAL' : (form.usn.trim() || 'CONFIDENTIAL'),
+      email: form.email.trim() || 'confidential@sjec.ac.in',
+      isAnonymous
+    };
+
+    const created = addDoubt(submissionData);
 
     confetti({
       particleCount: 70,
@@ -61,7 +70,7 @@ export const AskDoubtSection = () => {
           </h2>
 
           <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
-            Have a question regarding Build Blazer Phase 2, workshop curricula, or autonomous AI labs? Enter your student credentials and submit directly to club coordinators.
+            Have a question regarding Build Blazer Phase 2, workshop curricula, or autonomous AI labs? Doubts are published 100% anonymously on the public tracker to safeguard student privacy.
           </p>
         </div>
 
@@ -105,7 +114,11 @@ export const AskDoubtSection = () => {
                   Ticket #{submittedTicket.id}
                 </div>
                 <p className="text-slate-300 text-xs sm:text-sm font-sans max-w-lg mx-auto leading-relaxed">
-                  Thank you, <span className="text-white font-semibold">{submittedTicket.studentName}</span> ({submittedTicket.usn}). Your doubt regarding <span className="text-cyan-300">"{submittedTicket.subject || submittedTicket.category}"</span> has been transmitted to the AgentBlazer Admin Portal. Coordinators will review and provide a response.
+                  Your question regarding <span className="text-cyan-300">"{submittedTicket.subject || submittedTicket.category}"</span> has been transmitted to the coordinator desk.
+                  <br />
+                  <span className="text-emerald-400 font-mono text-xs inline-flex items-center justify-center gap-1.5 mt-3 bg-emerald-950/50 px-3 py-1 rounded-full border border-emerald-500/30">
+                    <ShieldCheck className="w-3.5 h-3.5" /> Identity Protected: Posted anonymously on the public tracker.
+                  </span>
                 </p>
                 <div className="pt-4 flex flex-wrap justify-center gap-4 font-mono text-xs">
                   <button
@@ -125,48 +138,69 @@ export const AskDoubtSection = () => {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-mono text-slate-300 mb-1">
-                      Student Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Rahul Shetty"
-                      value={form.studentName}
-                      onChange={(e) => setForm({ ...form, studentName: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-mono focus:border-purple-400 focus:outline-none"
-                    />
+                {/* Privacy Protection Banner */}
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono">
+                  <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
+                    <ShieldCheck className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
+                    <span><strong>Privacy Protection:</strong> All inquiries are published anonymously on the doubts tracker.</span>
                   </div>
-
-                  <div>
-                    <label className="block text-xs font-mono text-slate-300 mb-1">
-                      College USN *
-                    </label>
+                  <label className="inline-flex items-center gap-2 cursor-pointer select-none text-slate-700 dark:text-slate-300">
                     <input
-                      type="text"
-                      required
-                      placeholder="4SO23CS142"
-                      value={form.usn}
-                      onChange={(e) => setForm({ ...form, usn: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-mono focus:border-purple-400 focus:outline-none uppercase"
+                      type="checkbox"
+                      checked={isAnonymous}
+                      onChange={(e) => setIsAnonymous(e.target.checked)}
+                      className="rounded accent-emerald-500 w-4 h-4 cursor-pointer"
                     />
-                  </div>
+                    <span className="font-semibold text-[11px]">Submit Anonymously</span>
+                  </label>
                 </div>
+
+                {isAnonymous ? (
+                  <div className="p-3.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                    <Lock className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                    <span>Anonymous mode enabled. No name or USN is recorded or displayed.</span>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                        Student Full Name <span className="text-slate-500 text-[10px]">(Confidential — faculty only)</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Rahul Shetty"
+                        value={form.studentName}
+                        onChange={(e) => setForm({ ...form, studentName: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-mono focus:border-purple-400 focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                        College USN <span className="text-slate-500 text-[10px]">(Confidential — faculty only)</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="4SO23CS142"
+                        value={form.usn}
+                        onChange={(e) => setForm({ ...form, usn: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-mono focus:border-purple-400 focus:outline-none uppercase"
+                      />
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-xs font-mono text-slate-300 mb-1">
-                      SJEC College Email *
+                    <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                      College Email <span className="text-slate-500 text-[10px]">(Optional for reply alert)</span>
                     </label>
                     <input
                       type="email"
-                      required
-                      placeholder="rahul.23cs@sjec.ac.in"
+                      placeholder="student.23cs@sjec.ac.in"
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-mono focus:border-purple-400 focus:outline-none"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-mono focus:border-purple-400 focus:outline-none"
                     />
                   </div>
 
@@ -268,7 +302,10 @@ export const AskDoubtSection = () => {
           /* Live Doubts Tracker Table */
           <div className="max-w-4xl mx-auto space-y-4">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400 px-2">
-              <span>All student inquiries are publicly visible for community learning.</span>
+              <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Anonymous Board • Student identities protected</span>
+              </span>
               <span className="text-cyan-400">{doubts.length} Doubts Logged</span>
             </div>
 
@@ -315,8 +352,14 @@ export const AskDoubtSection = () => {
                     </div>
 
                     <div className="text-[11px] font-mono text-slate-400 flex items-center gap-2">
-                      <User className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>Asked by <strong className="text-slate-200">{d.studentName}</strong> ({d.usn}) • {d.dept}, {d.year}</span>
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+                      <span className="text-slate-700 dark:text-slate-300 font-semibold">Anonymous Student</span>
+                      <span>•</span>
+                      <span className="text-slate-500">Identity Protected</span>
+                      <span>•</span>
+                      <span className="text-purple-600 dark:text-purple-300">{d.dept || 'Engineering'}</span>
+                      <span>•</span>
+                      <span className="text-slate-500">{d.year || 'Student'}</span>
                     </div>
 
                     {/* Admin Response if available */}

@@ -109,20 +109,20 @@ export const Hero = () => {
           {/* Right Column: Free-Standing Realistic 3D Holographic Emblem */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center relative realistic-emblem-container">
             
-            <div className="relative w-80 h-80 sm:w-[420px] sm:h-[420px] flex items-center justify-center">
+            <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
               
               {/* Rotating SVG Cyber Ring */}
               <div className="absolute inset-0 rounded-full border border-dashed border-purple-400/20 dark:border-purple-500/30 animate-[spin_30s_linear_infinite] pointer-events-none"></div>
-              <div className="absolute inset-6 rounded-full border border-cyan-400/20 dark:border-cyan-500/20 animate-[spin_45s_linear_infinite_reverse] pointer-events-none"></div>
+              <div className="absolute inset-4 rounded-full border border-cyan-400/20 dark:border-cyan-500/20 animate-[spin_45s_linear_infinite_reverse] pointer-events-none"></div>
               
               {/* Soft Ambient Radial Halo */}
-              <div className="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-purple-500/20 via-pink-500/15 to-cyan-400/25 blur-3xl animate-pulse-slow"></div>
+              <div className="absolute w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-gradient-to-tr from-purple-500/20 via-pink-500/15 to-cyan-400/25 blur-2xl animate-pulse-slow"></div>
 
               {/* Realistic Ground Shadow / Pedestal Glow */}
-              <div className="absolute bottom-4 w-56 h-10 rounded-full bg-purple-900/40 dark:bg-purple-950/80 blur-xl"></div>
+              <div className="absolute bottom-2 w-40 h-6 rounded-full bg-purple-900/40 dark:bg-purple-950/80 blur-lg"></div>
 
-              {/* REALISTIC 3D FREE-FLOATING EMBLEM */}
-              <div className="relative z-20 w-72 sm:w-96 flex flex-col items-center justify-center animate-float">
+              {/* REALISTIC 3D FREE-FLOATING EMBLEM (compact scale) */}
+              <div className="relative z-20 w-44 sm:w-52 flex flex-col items-center justify-center animate-float">
                 <img 
                   src={agentblazerLogo} 
                   alt="AgentBlazer Club Official 3D Emblem" 
@@ -131,14 +131,14 @@ export const Hero = () => {
               </div>
 
               {/* Floating Orbiting Chip: Salesforce Synergy */}
-              <div className="absolute -top-2 right-2 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-cyan-400/50 dark:border-cyan-500/50 backdrop-blur-md shadow-lg flex items-center gap-2 text-xs font-mono text-cyan-700 dark:text-cyan-300 animate-float">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
+              <div className="absolute -top-3 right-0 px-2.5 py-1 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-cyan-400/50 dark:border-cyan-500/50 backdrop-blur-md shadow-lg flex items-center gap-1.5 text-[11px] font-mono text-cyan-700 dark:text-cyan-300 animate-float">
+                <Sparkles className="w-3 h-3 text-cyan-500 dark:text-cyan-400" />
                 <span>Salesforce Trailblazer</span>
               </div>
 
               {/* Floating Orbiting Chip: Autonomous Agents */}
-              <div className="absolute -bottom-2 left-2 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-purple-400/50 dark:border-purple-500/50 backdrop-blur-md shadow-lg flex items-center gap-2 text-xs font-mono text-purple-700 dark:text-purple-300 animate-float" style={{ animationDelay: '3s' }}>
-                <Bot className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400" />
+              <div className="absolute -bottom-3 left-0 px-2.5 py-1 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-purple-400/50 dark:border-purple-500/50 backdrop-blur-md shadow-lg flex items-center gap-1.5 text-[11px] font-mono text-purple-700 dark:text-purple-300 animate-float" style={{ animationDelay: '3s' }}>
+                <Bot className="w-3 h-3 text-purple-500 dark:text-purple-400" />
                 <span>Agentforce & LangGraph</span>
               </div>
 

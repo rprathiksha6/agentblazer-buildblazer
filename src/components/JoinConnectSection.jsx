@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { CLUB_META } from '../data/clubData';
-import cyberEyesArtwork from '../assets/cyber-eyes-artwork.png';
 import agentblazerLogo from '../assets/agentblazer-logo.png';
 import { Sparkles, Building2, Mail, MapPin, CheckCircle2, UserPlus, ArrowRight, X, Send } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -45,14 +44,8 @@ export const JoinConnectSection = () => {
   return (
     <section id="join-connect-section" className="py-24 relative overflow-hidden border-t border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-black/40">
       
-      {/* Background glowing cyber eyes artwork */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-15 dark:opacity-25 pointer-events-none">
-        <img 
-          src={cyberEyesArtwork} 
-          alt="Cyber Eyes Background Motif" 
-          className="w-full max-w-4xl object-contain filter blur-[1px]"
-        />
-      </div>
+      {/* Dynamic Ambient Background Glows */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-80 bg-gradient-to-r from-purple-500/15 via-cyan-500/15 to-transparent blur-3xl pointer-events-none"></div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-8">
         
