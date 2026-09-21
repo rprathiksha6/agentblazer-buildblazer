@@ -1,0 +1,194 @@
+import React, { useState, useEffect } from 'react';
+import { CLUB_META } from '../data/clubData';
+import agentblazerLogo from '../assets/agentblazer-logo.png';
+import { Sparkles, ArrowRight, Code2, Bot, Layers, Terminal, ChevronDown, CheckCircle2, Clock } from 'lucide-react';
+
+export const Hero = () => {
+  // Live Countdown timer to Phase 2 Build Blazer deadline (example: 7 days from now)
+  const [timeLeft, setTimeLeft] = useState({
+    days: 4,
+    hours: 18,
+    minutes: 42,
+    seconds: 15
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
+        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
+        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
+        return prev;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <section id="home" className="relative pt-12 pb-20 overflow-hidden">
+      {/* Dynamic Ambient Background Glows */}
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-purple-600/15 blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-1/3 right-1/4 w-80 h-80 rounded-full bg-cyan-500/15 blur-[130px] pointer-events-none"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          {/* Left Column: Heading & Content */}
+          <div className="lg:col-span-7 space-y-6 text-left">
+            
+            {/* Top Collegiate Pill Badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/40 border border-cyan-500/40 text-cyan-300 text-xs font-mono backdrop-blur-md shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+              <span>Collegiate AI Initiative • St Joseph Engineering College</span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight text-white leading-[1.1]">
+              Pioneering <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400">Autonomous</span> & <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400">Agentic AI Systems</span>
+            </h1>
+
+            {/* Department Tagline */}
+            <p className="text-sm sm:text-base font-mono text-purple-300/90 font-medium">
+              Department of Computer Science & Engineering • St Joseph Engineering College, Mangaluru
+            </p>
+
+            {/* Mission Paragraph */}
+            <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-sans">
+              {CLUB_META.description}
+            </p>
+
+            {/* CTA Button Group */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <button
+                onClick={() => scrollTo('activities-section')}
+                className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-medium text-sm transition-all shadow-lg hover:shadow-neon-cyan active:scale-95"
+              >
+                <span>Explore Workshops & Events</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => scrollTo('buildblazer-section')}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-cyan-400/50 text-slate-200 text-sm font-mono transition-all"
+              >
+                <Code2 className="w-4 h-4 text-cyan-400" />
+                <span>Build Blazer Phase 2</span>
+              </button>
+
+              <button
+                onClick={() => scrollTo('ask-doubt-section')}
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-purple-950/40 hover:bg-purple-900/50 border border-purple-500/30 text-purple-300 text-sm font-mono transition-all"
+              >
+                <Bot className="w-4 h-4 text-purple-400" />
+                <span>Ask Doubt Desk</span>
+              </button>
+            </div>
+
+            {/* Live Phase 2 Build Blazer Notice */}
+            <div className="p-3.5 rounded-xl bg-black/40 border border-purple-500/30 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-cyan-400 animate-spin" />
+                <span className="text-slate-300 font-semibold">Phase 2 Sprint Deadline:</span>
+                <span className="text-slate-400">Fork & Deploy</span>
+              </div>
+              <div className="flex items-center gap-2 font-bold text-cyan-300">
+                <span className="px-2 py-1 bg-white/5 rounded border border-white/10">{timeLeft.days}d</span>:
+                <span className="px-2 py-1 bg-white/5 rounded border border-white/10">{timeLeft.hours}h</span>:
+                <span className="px-2 py-1 bg-white/5 rounded border border-white/10">{timeLeft.minutes}m</span>:
+                <span className="px-2 py-1 bg-white/5 rounded border border-white/10">{timeLeft.seconds}s</span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column: High-tech 3D Cyber Emblem & Floating Modules */}
+          <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
+            
+            {/* Outer Holographic Circuit Ring */}
+            <div className="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center">
+              
+              {/* Rotating SVG Cyber Ring */}
+              <div className="absolute inset-0 rounded-full border border-dashed border-purple-500/30 animate-[spin_25s_linear_infinite] pointer-events-none"></div>
+              <div className="absolute inset-4 rounded-full border border-cyan-500/20 animate-[spin_40s_linear_infinite_reverse] pointer-events-none"></div>
+              
+              {/* Glowing Background Radial Halo */}
+              <div className="absolute w-64 h-64 rounded-full bg-gradient-to-tr from-purple-600/30 to-cyan-500/30 blur-2xl animate-pulse-slow"></div>
+
+              {/* Central Official Hexagonal Logo */}
+              <div className="relative z-20 w-56 h-56 sm:w-72 sm:h-72 p-4 rounded-3xl bg-black/60 border border-purple-500/40 backdrop-blur-xl shadow-2xl flex flex-col items-center justify-center group hover:border-cyan-400 transition-all duration-500 hover:scale-105">
+                <img 
+                  src={agentblazerLogo} 
+                  alt="AgentBlazer Club Emblem" 
+                  className="w-44 h-44 sm:w-56 sm:h-56 object-contain filter drop-shadow-[0_0_20px_rgba(168,85,247,0.7)] transition-transform duration-500 group-hover:rotate-1"
+                />
+                <div className="absolute bottom-3 font-display font-bold tracking-widest text-[11px] text-cyan-300 uppercase">
+                  AgentBlazer • SJEC
+                </div>
+              </div>
+
+              {/* Floating Orbiting Chip: Salesforce Synergy */}
+              <div className="absolute -top-3 right-4 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-cyan-500/50 backdrop-blur-md shadow-lg flex items-center gap-2 text-xs font-mono text-cyan-300 animate-float">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Salesforce Trailblazer</span>
+              </div>
+
+              {/* Floating Orbiting Chip: Autonomous Agents */}
+              <div className="absolute -bottom-3 left-4 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-purple-500/50 backdrop-blur-md shadow-lg flex items-center gap-2 text-xs font-mono text-purple-300 animate-float" style={{ animationDelay: '3s' }}>
+                <Bot className="w-3.5 h-3.5 text-purple-400" />
+                <span>Agentforce & LangGraph</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* Bottom Glass Stat Cards Bar (matching the user's screenshot!) */}
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-purple-500/40 transition-all group">
+            <div className="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-300">
+              8+
+            </div>
+            <div className="text-sm font-semibold text-white mt-1">Workshops & Challenges</div>
+            <div className="text-xs font-mono text-slate-400 mt-0.5">Hands-on labs & coding sprints</div>
+          </div>
+
+          <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-cyan-500/40 transition-all group">
+            <div className="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-300">
+              500+
+            </div>
+            <div className="text-sm font-semibold text-white mt-1">Students Reached</div>
+            <div className="text-xs font-mono text-slate-400 mt-0.5">Across engineering departments</div>
+          </div>
+
+          <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-amber-500/40 transition-all group">
+            <div className="text-xl font-display font-bold text-white mt-1 flex items-center gap-2">
+              <span>Salesforce</span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">Partner</span>
+            </div>
+            <div className="text-sm font-semibold text-amber-300 mt-1">Community Synergy</div>
+            <div className="text-xs font-mono text-slate-400 mt-0.5">Active Trailblazer Mentorship</div>
+          </div>
+
+          <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-emerald-500/40 transition-all group">
+            <div className="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-300">
+              35+
+            </div>
+            <div className="text-sm font-semibold text-white mt-1">Autonomous Prototypes</div>
+            <div className="text-xs font-mono text-slate-400 mt-0.5">Built by student teams at SJEC</div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+};
