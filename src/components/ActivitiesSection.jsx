@@ -45,11 +45,11 @@ export const ActivitiesSection = () => {
               <span>WORKSHOPS & LIVE SESSIONS • ACADEMIC YEAR 2025–2026</span>
             </div>
             
-            <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-slate-900 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">
               Workshops, Contests & <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-500 to-purple-600 dark:from-cyan-400 dark:via-sky-300 dark:to-purple-400 italic font-serif font-normal">Masterclasses</span>
             </h2>
             
-            <p className="text-slate-600 dark:text-slate-300 text-base max-w-2xl font-sans">
+            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-2xl font-sans">
               Hands-on technical deep dives, algorithmic challenges, and real-world system deployments with seasoned engineers.
             </p>
           </div>
@@ -117,7 +117,7 @@ export const ActivitiesSection = () => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-cyan-300 transition-colors">
+                  <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-cyan-300 transition-colors">
                     {act.title}
                   </h3>
 

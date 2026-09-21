@@ -48,7 +48,7 @@ export const Hero = () => {
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
               Pioneering <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-500 dark:from-purple-400 dark:via-pink-400 dark:to-cyan-400">Autonomous</span> & <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-500 to-indigo-600 dark:from-cyan-400 dark:via-sky-300 dark:to-indigo-400">Agentic AI Systems</span>
             </h1>
 
@@ -152,7 +152,7 @@ export const Hero = () => {
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
           <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-purple-500/40 transition-all group">
-            <div className="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 dark:from-purple-400 dark:to-pink-300">
+            <div className="text-2xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 dark:from-purple-400 dark:to-pink-300">
               8+
             </div>
             <div className="text-sm font-semibold text-slate-800 dark:text-white mt-1">Workshops & Challenges</div>
@@ -160,7 +160,7 @@ export const Hero = () => {
           </div>
 
           <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-cyan-500/40 transition-all group">
-            <div className="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-500 dark:from-cyan-400 dark:to-blue-300">
+            <div className="text-2xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-500 dark:from-cyan-400 dark:to-blue-300">
               500+
             </div>
             <div className="text-sm font-semibold text-slate-800 dark:text-white mt-1">Students Reached</div>
@@ -168,7 +168,7 @@ export const Hero = () => {
           </div>
 
           <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-amber-500/40 transition-all group">
-            <div className="text-xl font-display font-bold text-slate-900 dark:text-white mt-1 flex items-center gap-2">
+            <div className="text-lg font-display font-bold text-slate-900 dark:text-white mt-1 flex items-center gap-2">
               <span>Salesforce</span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30">Partner</span>
             </div>
@@ -177,7 +177,7 @@ export const Hero = () => {
           </div>
 
           <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-emerald-500/40 transition-all group">
-            <div className="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-cyan-300">
+            <div className="text-2xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-cyan-300">
               35+
             </div>
             <div className="text-sm font-semibold text-slate-800 dark:text-white mt-1">Autonomous Prototypes</div>

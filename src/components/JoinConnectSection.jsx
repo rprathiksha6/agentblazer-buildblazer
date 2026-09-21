@@ -68,7 +68,7 @@ export const JoinConnectSection = () => {
         </div>
 
         {/* Headline */}
-        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
           Ready to Build with <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-500 to-purple-600 dark:from-cyan-400 dark:via-sky-300 dark:to-purple-400 italic">Autonomous Intelligence?</span>
         </h2>
 

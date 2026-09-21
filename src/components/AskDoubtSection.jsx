@@ -56,11 +56,11 @@ export const AskDoubtSection = () => {
             <span>STUDENT INQUIRY & DOUBT DESK</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white">
-            Ask a <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-300 to-cyan-400">Doubt</span>
+          <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">
+            Ask a <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-500 dark:from-purple-400 dark:via-pink-300 dark:to-cyan-400">Doubt</span>
           </h2>
 
-          <p className="text-slate-300 text-base sm:text-lg">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
             Have a question regarding Build Blazer Phase 2, workshop curricula, or autonomous AI labs? Enter your student credentials and submit directly to club coordinators.
           </p>
         </div>
@@ -98,7 +98,7 @@ export const AskDoubtSection = () => {
             {submittedTicket ? (
               <div className="p-8 rounded-2xl bg-purple-950/40 border border-purple-500/50 space-y-4 text-center animate-fadeIn">
                 <CheckCircle2 className="w-12 h-12 text-cyan-400 mx-auto animate-bounce" />
-                <h3 className="text-2xl font-display font-bold text-white">
+                <h3 className="text-xl font-display font-bold text-white">
                   Doubt Routed Successfully!
                 </h3>
                 <div className="inline-block px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-mono text-xs border border-cyan-500/40">

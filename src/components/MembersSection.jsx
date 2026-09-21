@@ -16,11 +16,11 @@ export const MembersSection = () => {
             <span>CORE COUNCIL & LEADERSHIP</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-slate-900 dark:text-white">
+          <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">
             Club Mentors & <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-500 to-purple-600 dark:from-cyan-400 dark:via-sky-300 dark:to-purple-400">Student Officers</span>
           </h2>
 
-          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
             Empowering students with industry guidance, cloud engineering architectures, and authentic peer mentorship.
           </p>
         </div>
@@ -28,7 +28,7 @@ export const MembersSection = () => {
         {/* 1. Faculty Advisory Council */}
         <div className="mb-16">
           <div className="flex items-center gap-2 mb-6 border-l-2 border-cyan-500 pl-3">
-            <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white tracking-wide">
+            <h3 className="text-base sm:text-lg font-display font-bold text-slate-900 dark:text-white tracking-wide">
               Faculty Advisory Council
             </h3>
             <span className="text-xs font-mono text-slate-500 dark:text-slate-400">— Department of CSE</span>
@@ -97,7 +97,7 @@ export const MembersSection = () => {
         <div>
           <div className="flex items-center justify-between mb-6 border-l-2 border-purple-500 pl-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white tracking-wide">
+              <h3 className="text-base sm:text-lg font-display font-bold text-slate-900 dark:text-white tracking-wide">
                 Student Core Team & Officers
               </h3>
               <span className="text-xs font-mono text-slate-500 dark:text-slate-400">— Academic Year 2025–2026</span>

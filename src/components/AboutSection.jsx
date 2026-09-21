@@ -14,31 +14,31 @@ export const AboutSection = () => {
             <span>FOUNDATIONS & LEADERSHIP</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white">
-            Inauguration & <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Mentorship Council</span>
+          <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">
+            Inauguration & <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-purple-400 dark:to-cyan-400">Mentorship Council</span>
           </h2>
 
-          <p className="text-slate-300 text-base sm:text-lg font-sans">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-sans">
             Fostering technical curiosity, genuine mentorship, and bridging classroom theory with autonomous AI engineering practices.
           </p>
         </div>
 
         {/* Inauguration Feature Banner Card (matching screenshot 3) */}
-        <div className="mt-12 glass-panel p-6 sm:p-10 rounded-3xl border border-white/10 relative overflow-hidden group hover:border-purple-500/40 transition-all">
+        <div className="mt-12 glass-panel p-6 sm:p-10 rounded-3xl border border-slate-200 dark:border-white/10 relative overflow-hidden group hover:border-purple-500/40 transition-all">
           <div className="absolute top-0 right-0 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             <div className="lg:col-span-8 space-y-4">
-              <div className="inline-block px-3 py-1 rounded-md bg-purple-500/20 text-purple-300 font-mono text-xs border border-purple-500/30">
+              <div className="inline-block px-3 py-1 rounded-md bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 font-mono text-xs border border-purple-200 dark:border-purple-500/30">
                 Official Launch & Keynote
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-display font-bold text-white">
-                AgentBlazer Club Launch & <span className="italic text-cyan-300">Agentforce Symposium</span>
+              <h3 className="text-lg sm:text-xl font-display font-bold text-slate-900 dark:text-white">
+                AgentBlazer Club Launch & <span className="italic text-cyan-600 dark:text-cyan-300">Agentforce Symposium</span>
               </h3>
 
-              <p className="text-slate-300 text-base leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
                 The Department of Computer Science & Engineering founded the AgentBlazer Club to build an authentic student collective centered on autonomous intelligence, open agent frameworks, and industry partnership.
               </p>
 

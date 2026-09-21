@@ -78,11 +78,11 @@ export const BuildBlazerSection = () => {
             <span>CHALLENGE TRACK • PHASE 2</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white">
-            Build Blazer <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-purple-400">Sprint</span>
+          <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">
+            Build Blazer <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-500 to-purple-600 dark:from-cyan-400 dark:via-sky-300 dark:to-purple-400">Sprint</span>
           </h2>
 
-          <p className="text-slate-300 text-base sm:text-lg">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
             Turn your team's winning Figma design into a live, high-performance deployed web application.
           </p>
         </div>
@@ -94,7 +94,7 @@ export const BuildBlazerSection = () => {
               key={s.step}
               className="glass-panel p-5 rounded-2xl border border-white/10 relative overflow-hidden group hover:border-cyan-500/40 transition-all"
             >
-              <div className="text-3xl font-display font-extrabold text-white/20 group-hover:text-cyan-400 transition-colors mb-2">
+              <div className="text-2xl font-display font-bold text-white/20 group-hover:text-cyan-400 transition-colors mb-2">
                 0{s.step}
               </div>
               <h4 className="text-sm font-display font-bold text-white mb-1">
@@ -143,7 +143,7 @@ export const BuildBlazerSection = () => {
               <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-bold">
                 OFFICIAL SUBMISSION DESK
               </span>
-              <h3 className="text-2xl font-display font-bold text-white">
+              <h3 className="text-xl font-display font-bold text-white">
                 Submit Phase 2 Project
               </h3>
               <p className="text-xs font-mono text-slate-400">

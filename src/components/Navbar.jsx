@@ -50,7 +50,7 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-display font-extrabold text-xl tracking-wider text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-cyan-300 transition-colors">
+                <span className="font-display font-bold text-lg tracking-wide text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-cyan-300 transition-colors">
                   AgentBlazer
                 </span>
                 <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30">
