@@ -8,6 +8,7 @@ import { MembersSection } from './components/MembersSection';
 import { ActivitiesSection } from './components/ActivitiesSection';
 import { BuildBlazerSection } from './components/BuildBlazerSection';
 import { AskDoubtSection } from './components/AskDoubtSection';
+import { JoinConnectSection } from './components/JoinConnectSection';
 import { NotificationModal } from './components/NotificationModal';
 import { Chatbot } from './components/Chatbot';
 import { AdminPortal } from './components/AdminPortal';
@@ -63,6 +64,7 @@ const MainLayout = () => {
             <ActivitiesSection />
             <BuildBlazerSection />
             <AskDoubtSection />
+            <JoinConnectSection />
           </>
         )}
       </main>

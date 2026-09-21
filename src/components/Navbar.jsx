@@ -10,10 +10,11 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
   const navLinks = [
     { label: 'Home', href: '#home' },
     { label: 'About Us', href: '#about-section' },
-    { label: 'Leadership', href: '#members-section' },
     { label: 'Events & Workshops', href: '#activities-section' },
+    { label: 'Leadership', href: '#members-section' },
     { label: 'Build Blazer', href: '#buildblazer-section' },
     { label: 'Ask Doubt', href: '#ask-doubt-section' },
+    { label: 'Join & Connect', href: '#join-connect-section' },
   ];
 
   const handleNavClick = (e, href) => {
