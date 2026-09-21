@@ -9,6 +9,11 @@ export const ClubProvider = ({ children }) => {
     return localStorage.getItem('agentblazer_theme_mode') || 'dark';
   });
 
+  // Curated Accent Palette: 'violet' | 'sapphire' | 'emerald' | 'amber'
+  const [accentColor, setAccentColorState] = useState(() => {
+    return localStorage.getItem('agentblazer_accent_color') || 'violet';
+  });
+
   // Portal view: 'student' | 'admin'
   const [portalView, setPortalViewState] = useState(() => {
     return localStorage.getItem('agentblazer_portal_view') || 'student';
@@ -34,9 +39,10 @@ export const ClubProvider = ({ children }) => {
 
   const [activeSection, setActiveSection] = useState('home');
 
-  // Sync theme to document element
+  // Sync theme and accent to document element
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-accent', accentColor);
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light');
@@ -45,7 +51,8 @@ export const ClubProvider = ({ children }) => {
       document.documentElement.classList.remove('dark');
     }
     localStorage.setItem('agentblazer_theme_mode', theme);
-  }, [theme]);
+    localStorage.setItem('agentblazer_accent_color', accentColor);
+  }, [theme, accentColor]);
 
   // Sync storage
   useEffect(() => {
@@ -157,6 +164,8 @@ export const ClubProvider = ({ children }) => {
       theme,
       setTheme,
       toggleTheme,
+      accentColor,
+      setAccentColor: setAccentColorState,
       portalView,
       setPortalView,
       notifications,

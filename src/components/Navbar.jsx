@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useClub } from '../context/ClubContext';
 import agentblazerLogo from '../assets/agentblazer-logo.png';
-import { Bell, ShieldCheck, Terminal, Menu, X, ArrowRight, Sun, Moon } from 'lucide-react';
+import { Bell, ShieldCheck, Terminal, Menu, X, ArrowRight, Sun, Moon, Palette } from 'lucide-react';
 
 export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
-  const { theme, toggleTheme, portalView, setPortalView, unreadNotifCount } = useClub();
+  const { theme, toggleTheme, accentColor, setAccentColor, portalView, setPortalView, unreadNotifCount } = useClub();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -77,9 +77,33 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
             ))}
           </nav>
 
-          {/* Action Tools: Light/Dark Mode Switch, Notifications, Admin Switch */}
+          {/* Action Tools: Theme Palette, Light/Dark Switch, Notifications, Admin Switch */}
           <div className="flex items-center gap-2 sm:gap-3">
             
+            {/* Curated Theme Accent Selector */}
+            <div className="hidden md:flex items-center gap-1.5 p-1 rounded-xl bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10" title="Curated Theme Palette">
+              <button
+                onClick={() => setAccentColor('violet')}
+                title="Cyber Violet (AgentBlazer Signature)"
+                className={`w-3.5 h-3.5 rounded-full bg-purple-500 transition-all ${accentColor === 'violet' ? 'ring-2 ring-purple-400 scale-125' : 'opacity-60 hover:opacity-100'}`}
+              />
+              <button
+                onClick={() => setAccentColor('sapphire')}
+                title="Deep Sapphire (Oceanic AI / Enterprise)"
+                className={`w-3.5 h-3.5 rounded-full bg-sky-400 transition-all ${accentColor === 'sapphire' ? 'ring-2 ring-sky-300 scale-125' : 'opacity-60 hover:opacity-100'}`}
+              />
+              <button
+                onClick={() => setAccentColor('emerald')}
+                title="Quantum Emerald (Terminal Cyber)"
+                className={`w-3.5 h-3.5 rounded-full bg-emerald-500 transition-all ${accentColor === 'emerald' ? 'ring-2 ring-emerald-300 scale-125' : 'opacity-60 hover:opacity-100'}`}
+              />
+              <button
+                onClick={() => setAccentColor('amber')}
+                title="Solar Amber (Gold Blaze)"
+                className={`w-3.5 h-3.5 rounded-full bg-amber-500 transition-all ${accentColor === 'amber' ? 'ring-2 ring-amber-300 scale-125' : 'opacity-60 hover:opacity-100'}`}
+              />
+            </div>
+
             {/* Simple Light / Dark Mode Toggle */}
             <button
               onClick={toggleTheme}

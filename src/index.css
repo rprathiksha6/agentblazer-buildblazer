@@ -40,10 +40,75 @@
   --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
 }
 
+/* Palette Overrides */
+[data-accent="sapphire"].dark, [data-accent="sapphire"][data-theme="dark"] {
+  --color-primary: #38bdf8;
+  --color-primary-rgb: 56, 189, 248;
+  --color-accent: #818cf8;
+  --color-accent-rgb: 129, 140, 248;
+  --color-glow: rgba(56, 189, 248, 0.45);
+  --color-border-hover: rgba(56, 189, 248, 0.5);
+  --badge-bg: rgba(56, 189, 248, 0.15);
+}
+[data-accent="sapphire"].light, [data-accent="sapphire"][data-theme="light"] {
+  --color-primary: #0284c7;
+  --color-primary-rgb: 2, 132, 199;
+  --color-accent: #4f46e5;
+  --color-accent-rgb: 79, 70, 229;
+  --color-glow: rgba(2, 132, 199, 0.25);
+  --color-border-hover: rgba(2, 132, 199, 0.4);
+  --badge-bg: rgba(2, 132, 199, 0.1);
+}
+
+[data-accent="emerald"].dark, [data-accent="emerald"][data-theme="dark"] {
+  --color-primary: #10b981;
+  --color-primary-rgb: 16, 185, 129;
+  --color-accent: #06b6d4;
+  --color-accent-rgb: 6, 182, 212;
+  --color-glow: rgba(16, 185, 129, 0.45);
+  --color-border-hover: rgba(16, 185, 129, 0.5);
+  --badge-bg: rgba(16, 185, 129, 0.15);
+}
+[data-accent="emerald"].light, [data-accent="emerald"][data-theme="light"] {
+  --color-primary: #059669;
+  --color-primary-rgb: 5, 150, 105;
+  --color-accent: #0891b2;
+  --color-accent-rgb: 8, 145, 178;
+  --color-glow: rgba(5, 150, 105, 0.25);
+  --color-border-hover: rgba(5, 150, 105, 0.4);
+  --badge-bg: rgba(5, 150, 105, 0.1);
+}
+
+[data-accent="amber"].dark, [data-accent="amber"][data-theme="dark"] {
+  --color-primary: #f59e0b;
+  --color-primary-rgb: 245, 158, 11;
+  --color-accent: #f97316;
+  --color-accent-rgb: 249, 115, 22;
+  --color-glow: rgba(245, 158, 11, 0.45);
+  --color-border-hover: rgba(245, 158, 11, 0.5);
+  --badge-bg: rgba(245, 158, 11, 0.15);
+}
+[data-accent="amber"].light, [data-accent="amber"][data-theme="light"] {
+  --color-primary: #d97706;
+  --color-primary-rgb: 217, 119, 6;
+  --color-accent: #ea580c;
+  --color-accent-rgb: 234, 88, 12;
+  --color-glow: rgba(217, 119, 6, 0.25);
+  --color-border-hover: rgba(217, 119, 6, 0.4);
+  --badge-bg: rgba(217, 119, 6, 0.1);
+}
+
 body {
   background-color: var(--color-bg-base);
   color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.025em;
 }
 
 /* Dynamic Cyber Grid Background */
@@ -84,13 +149,13 @@ body {
 }
 
 .realistic-emblem {
-  filter: drop-shadow(0 15px 35px rgba(168, 85, 247, 0.45)) drop-shadow(0 0 20px rgba(0, 240, 255, 0.35));
+  filter: drop-shadow(0 15px 35px var(--color-glow)) drop-shadow(0 0 20px rgba(var(--color-accent-rgb), 0.35));
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.5s ease;
 }
 
 .realistic-emblem:hover {
   transform: translateY(-8px) scale(1.04) rotateX(4deg) rotateY(-4deg);
-  filter: drop-shadow(0 25px 45px rgba(168, 85, 247, 0.65)) drop-shadow(0 0 30px rgba(0, 240, 255, 0.55));
+  filter: drop-shadow(0 25px 45px var(--color-glow)) drop-shadow(0 0 30px rgba(var(--color-accent-rgb), 0.55));
 }
 
 /* Custom Scrollbar */
