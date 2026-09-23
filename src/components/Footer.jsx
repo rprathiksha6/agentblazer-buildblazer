@@ -4,7 +4,7 @@ import { CLUB_META } from '../data/clubData';
 import { useClub } from '../context/ClubContext';
 import { Mail, MapPin, Shield, Play, Sparkles, Terminal, ChevronRight } from 'lucide-react';
 
-export const Footer = ({ onOpenAdminLogin }) => {
+export const Footer = () => {
   const { triggerReplayIntro } = useClub();
 
   return (
@@ -93,26 +93,17 @@ export const Footer = ({ onOpenAdminLogin }) => {
             </ul>
           </div>
 
-          {/* Col 3: Academic & Administrative Access */}
+          {/* Col 3: Academic & Institutional Charter */}
           <div className="md:col-span-3 space-y-3 font-mono text-xs">
             <h4 className="font-display font-bold text-sm text-white uppercase tracking-wider">
-              Governance & Portal
+              Academic Affiliation
             </h4>
             <p className="text-[11px] text-slate-300 leading-relaxed">
-              Inaugurated under the Department of Computer Science & Engineering, St Joseph Engineering College.
+              Department of Computer Science & Engineering<br />
+              St Joseph Engineering College, Vamanjoor, Mangaluru - 575028
             </p>
-            <div className="pt-2">
-              <a
-                href="/admin"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onOpenAdminLogin();
-                }}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 hover:text-cyan-300 transition-all text-xs"
-              >
-                <Shield className="w-3.5 h-3.5 text-purple-400" />
-                <span>Admin Console (/admin)</span>
-              </a>
+            <div className="pt-1 text-[11px] text-slate-400">
+              Autonomous Institution affiliated to VTU • Approved by AICTE • Accredited by NAAC & NBA
             </div>
           </div>
 

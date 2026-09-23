@@ -3,7 +3,7 @@ import { useClub } from '../context/ClubContext';
 import agentblazerLogo from '../assets/agentblazer-logo.png';
 import { Bell, ShieldCheck, Terminal, Menu, X, ArrowRight, Sun, Moon, Play } from 'lucide-react';
 
-export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
+export const Navbar = ({ onOpenNotifs }) => {
   const { theme, toggleTheme, accentColor, setAccentColor, portalView, setPortalView, unreadNotifCount, triggerReplayIntro } = useClub();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -148,35 +148,6 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
               )}
             </button>
 
-            {/* Portal Switcher Link (Student vs Admin) */}
-            {portalView === 'admin' ? (
-              <a
-                href="/"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPortalView('student');
-                }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-900/40 border border-purple-400 dark:border-purple-500/40 text-purple-700 dark:text-purple-200 text-xs font-mono hover:bg-purple-200 dark:hover:bg-purple-800/40 transition-all shadow-sm"
-              >
-                <Terminal className="w-3.5 h-3.5 text-purple-600 dark:text-cyan-400" />
-                <span>Student View</span>
-              </a>
-            ) : (
-              <a
-                id="nav-admin-btn"
-                href="/admin"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPortalView('admin');
-                }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-purple-700 dark:hover:text-cyan-300 text-xs font-mono transition-all"
-                title="Admin Management Console (/admin)"
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-                <span className="hidden sm:inline">Admin Portal</span>
-              </a>
-            )}
-
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -201,7 +172,7 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
               {link.label}
             </a>
           ))}
-          <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex justify-between items-center">
+          <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex justify-end items-center">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -211,17 +182,6 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
             >
               <Play className="w-3 h-3" /> Replay Intro
             </button>
-            <a
-              href="/admin"
-              onClick={(e) => {
-                e.preventDefault();
-                setMobileMenuOpen(false);
-                setPortalView('admin');
-              }}
-              className="text-xs font-mono text-purple-600 dark:text-cyan-400 flex items-center gap-1"
-            >
-              Admin Portal (/admin) <ArrowRight className="w-3 h-3" />
-            </a>
           </div>
         </div>
       )}

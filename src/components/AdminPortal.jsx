@@ -4,8 +4,7 @@ import agentblazerLogo from '../assets/agentblazer-logo.png';
 import { 
   ShieldCheck, Lock, LogOut, ArrowLeft, Globe, MessageSquare, 
   Users, Bell, Settings, Plus, Trash2, Edit3, CheckCircle2, 
-  Clock, AlertCircle, Sparkles, RefreshCw, Save, ChevronRight,
-  ExternalLink, Search, Filter, Shield, Eye
+  AlertCircle, Sparkles, Save, ExternalLink, Search
 } from 'lucide-react';
 
 export const AdminPortal = () => {
@@ -13,7 +12,7 @@ export const AdminPortal = () => {
     adminAuth, loginAdmin, logoutAdmin,
     siteContent, updateHeroContent, updateIntroContent,
     updateActivity, addActivity, deleteActivity,
-    updateFaculty, updateStudentLead, addStudentLead, deleteStudentLead, resetToDefaultContent,
+    resetToDefaultContent,
     doubts, replyToDoubt, updateDoubtStatus,
     memberships, updateMembershipStatus,
     notifications, addNotification,
@@ -25,11 +24,11 @@ export const AdminPortal = () => {
   const [loginError, setLoginError] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Admin Active Tab
+  // Main Active Tab — Defaults directly to 'cms' (Edit Section)
   const [activeTab, setActiveTab] = useState('cms'); // 'cms' | 'doubts' | 'members' | 'broadcast' | 'settings'
 
   // CMS Sub-Tab
-  const [cmsSection, setCmsSection] = useState('hero'); // 'hero' | 'intro' | 'activities' | 'leadership'
+  const [cmsSection, setCmsSection] = useState('hero'); // 'hero' | 'intro' | 'activities'
   const [cmsSaveSuccess, setCmsSaveSuccess] = useState(false);
 
   // Hero CMS Form State
@@ -215,26 +214,26 @@ export const AdminPortal = () => {
   // -------------------------------------------------------------
   if (!adminAuth.isAuthenticated) {
     return (
-      <div className="min-h-[85vh] flex items-center justify-center px-4 py-16 animate-fadeIn">
-        <div className="max-w-md w-full glass-panel p-8 sm:p-10 rounded-3xl border border-purple-500/40 shadow-2xl bg-white dark:bg-black/90 space-y-6">
+      <div className="min-h-screen flex items-center justify-center px-4 py-16 animate-fadeIn bg-[#07090e]">
+        <div className="max-w-md w-full glass-panel p-8 sm:p-10 rounded-3xl border border-purple-500/30 shadow-2xl bg-[#0a0d16] space-y-6">
           
           <div className="text-center space-y-3">
-            <div className="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-950/60 border border-purple-400 dark:border-purple-500/40 p-2 mx-auto flex items-center justify-center shadow-neon-violet">
+            <div className="w-16 h-16 rounded-2xl bg-purple-950/60 border border-purple-500/40 p-2 mx-auto flex items-center justify-center shadow-neon-violet">
               <img src={agentblazerLogo} alt="Logo" className="w-full h-full object-contain" />
             </div>
 
-            <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white">
+            <h2 className="text-2xl font-display font-bold text-white">
               Admin Portal
             </h2>
-            <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
-              Department of CSE • AgentBlazer Management Console
+            <p className="text-xs font-mono text-purple-300">
+              Department of CSE • Management Console
             </p>
 
-            {/* Direct Separate Link Banner */}
-            <div className="flex items-center justify-between p-2.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-500/30 text-[11px] font-mono text-purple-700 dark:text-purple-300">
+            {/* Direct Link Info Badge */}
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/30 text-[11px] font-mono text-purple-300">
               <div className="flex items-center gap-1.5 truncate">
-                <ExternalLink className="w-3.5 h-3.5 text-cyan-500 flex-shrink-0" />
-                <span>Direct Link: <strong className="text-slate-900 dark:text-white">/admin</strong></span>
+                <ExternalLink className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+                <span>Direct Link: <strong className="text-white">/admin</strong></span>
               </div>
               <button
                 type="button"
@@ -251,15 +250,15 @@ export const AdminPortal = () => {
           </div>
 
           {loginError && (
-            <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 text-xs font-mono flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-500" />
+            <div className="p-3.5 rounded-2xl bg-purple-950/40 border border-purple-500/40 text-purple-200 text-xs font-mono flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-purple-400" />
               <span>{loginError}</span>
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4 text-xs font-mono">
             <div>
-              <label className="block text-slate-700 dark:text-slate-300 mb-1.5 font-semibold">
+              <label className="block text-slate-300 mb-1.5 font-semibold">
                 Admin Username
               </label>
               <input
@@ -268,12 +267,12 @@ export const AdminPortal = () => {
                 value={loginForm.username}
                 onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
                 placeholder="admin"
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-slate-700 dark:text-slate-300 mb-1.5 font-semibold">
+              <label className="block text-slate-300 mb-1.5 font-semibold">
                 Admin Password
               </label>
               <input
@@ -282,23 +281,23 @@ export const AdminPortal = () => {
                 value={loginForm.password}
                 onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                 placeholder="Enter password (agentblazer2026)"
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:border-purple-500 focus:outline-none tracking-wider"
+                className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500 focus:outline-none tracking-wider"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold text-sm shadow-md transition-all active:scale-[0.99]"
+              className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm shadow-md transition-all active:scale-[0.99]"
             >
               Sign In to Console
             </button>
           </form>
 
-          <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex flex-col gap-2.5 text-center">
+          <div className="pt-4 border-t border-white/10 flex flex-col gap-2.5 text-center">
             <button
               type="button"
               onClick={handleQuickDemoLogin}
-              className="w-full py-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 border border-cyan-300 dark:border-cyan-500/40 text-cyan-700 dark:text-cyan-300 text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-purple-500/40 text-purple-200 text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1.5"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>One-Click Quick Admin Access (Demo)</span>
@@ -307,7 +306,7 @@ export const AdminPortal = () => {
             <button
               type="button"
               onClick={() => setPortalView('student')}
-              className="text-xs font-mono text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-300 flex items-center justify-center gap-1 mt-1 transition-colors"
+              className="text-xs font-mono text-slate-400 hover:text-purple-300 flex items-center justify-center gap-1 mt-1 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Return to Public Website</span>
@@ -320,28 +319,28 @@ export const AdminPortal = () => {
   }
 
   // -------------------------------------------------------------
-  // 2. AUTHENTICATED ADMIN DASHBOARD
+  // 2. AUTHENTICATED ADMIN DASHBOARD (Unified Single Purple Theme)
   // -------------------------------------------------------------
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 animate-fadeIn">
+    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 animate-fadeIn bg-[#07090e]">
       
       {/* Top Admin Navigation Header */}
-      <div className="glass-panel p-6 rounded-3xl border border-purple-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/90 dark:bg-black/80">
+      <div className="glass-panel p-6 rounded-3xl border border-purple-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0a0d16]">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/60 border border-purple-400 dark:border-purple-500/40 p-1.5 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-2xl bg-purple-950/60 border border-purple-500/40 p-1.5 flex items-center justify-center">
             <img src={agentblazerLogo} alt="Logo" className="w-full h-full object-contain" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-display font-bold text-slate-900 dark:text-white">
+              <h1 className="text-xl font-display font-bold text-white">
                 AgentBlazer Admin Console
               </h1>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-purple-950/60 text-purple-300 border border-purple-500/30">
                 Live CMS Active
               </span>
             </div>
-            <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
-              Logged in as <strong className="text-purple-600 dark:text-purple-400">{adminAuth.username || 'admin'}</strong> • Real-time website management
+            <p className="text-xs font-mono text-purple-300/80">
+              Logged in as <strong className="text-white">{adminAuth.username || 'admin'}</strong> • Real-time website management
             </p>
           </div>
         </div>
@@ -354,16 +353,16 @@ export const AdminPortal = () => {
               setCopiedLink(true);
               setTimeout(() => setCopiedLink(false), 2000);
             }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-100 dark:bg-purple-950/50 hover:bg-purple-200 dark:hover:bg-purple-900/60 border border-purple-300 dark:border-purple-500/40 text-purple-700 dark:text-purple-300 text-xs font-mono transition-all"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-purple-500/40 text-purple-300 text-xs font-mono transition-all"
             title="Direct URL: /admin"
           >
-            <ExternalLink className="w-3.5 h-3.5 text-cyan-500" />
+            <ExternalLink className="w-3.5 h-3.5" />
             <span>{copiedLink ? "Copied /admin!" : "Copy Admin Link"}</span>
           </button>
 
           <button
             onClick={() => setPortalView('student')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-200 text-xs font-mono transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 text-xs font-mono transition-all"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>View Public Website</span>
@@ -371,7 +370,7 @@ export const AdminPortal = () => {
           
           <button
             onClick={logoutAdmin}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-300 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 text-xs font-mono transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-500/40 text-purple-300 text-xs font-mono transition-all"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Logout</span>
@@ -379,18 +378,18 @@ export const AdminPortal = () => {
         </div>
       </div>
 
-      {/* Main Tab Controls */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-white/10 pb-4 overflow-x-auto">
+      {/* Main Tab Controls — Unified in Primary Purple */}
+      <div className="flex items-center gap-2 border-b border-purple-500/20 pb-4 overflow-x-auto">
         <button
           onClick={() => setActiveTab('cms')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
             activeTab === 'cms'
               ? 'bg-purple-600 text-white shadow-md'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
+              : 'text-slate-400 hover:bg-purple-950/30 hover:text-white'
           }`}
         >
           <Globe className="w-4 h-4" />
-          <span>Website Live CMS</span>
+          <span>Edit Website Content</span>
         </button>
 
         <button
@@ -398,11 +397,11 @@ export const AdminPortal = () => {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
             activeTab === 'doubts'
               ? 'bg-purple-600 text-white shadow-md'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
+              : 'text-slate-400 hover:bg-purple-950/30 hover:text-white'
           }`}
         >
           <MessageSquare className="w-4 h-4" />
-          <span>Student Doubts Ledger</span>
+          <span>Student Doubts</span>
           <span className="px-1.5 py-0.2 rounded-full bg-white/20 text-[10px]">
             {doubts.filter(d => d.status === 'pending').length}
           </span>
@@ -413,11 +412,11 @@ export const AdminPortal = () => {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
             activeTab === 'members'
               ? 'bg-purple-600 text-white shadow-md'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
+              : 'text-slate-400 hover:bg-purple-950/30 hover:text-white'
           }`}
         >
           <Users className="w-4 h-4" />
-          <span>Membership Applications</span>
+          <span>Memberships</span>
           <span className="px-1.5 py-0.2 rounded-full bg-white/20 text-[10px]">
             {memberships.filter(m => m.status === 'pending').length}
           </span>
@@ -428,7 +427,7 @@ export const AdminPortal = () => {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
             activeTab === 'broadcast'
               ? 'bg-purple-600 text-white shadow-md'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
+              : 'text-slate-400 hover:bg-purple-950/30 hover:text-white'
           }`}
         >
           <Bell className="w-4 h-4" />
@@ -440,27 +439,27 @@ export const AdminPortal = () => {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
             activeTab === 'settings'
               ? 'bg-purple-600 text-white shadow-md'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
+              : 'text-slate-400 hover:bg-purple-950/30 hover:text-white'
           }`}
         >
           <Settings className="w-4 h-4" />
-          <span>System & Reset</span>
+          <span>Reset Defaults</span>
         </button>
       </div>
 
       {/* ----------------------------------------------------------- */}
-      {/* TAB 1: WEBSITE LIVE CMS */}
+      {/* TAB 1: WEBSITE EDIT SECTION (CMS) */}
       {/* ----------------------------------------------------------- */}
       {activeTab === 'cms' && (
         <div className="space-y-6">
           
-          {/* CMS Sub-Tabs & Notification Feedback */}
+          {/* Edit Sub-Tabs */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2 bg-slate-200/80 dark:bg-black/60 p-1 rounded-2xl border border-slate-300 dark:border-white/10 text-xs font-mono">
+            <div className="flex items-center gap-2 bg-black/60 p-1 rounded-2xl border border-purple-500/30 text-xs font-mono">
               <button
                 onClick={() => setCmsSection('hero')}
                 className={`px-4 py-2 rounded-xl transition-all ${
-                  cmsSection === 'hero' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400'
+                  cmsSection === 'hero' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Hero Section
@@ -468,7 +467,7 @@ export const AdminPortal = () => {
               <button
                 onClick={() => setCmsSection('intro')}
                 className={`px-4 py-2 rounded-xl transition-all ${
-                  cmsSection === 'intro' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400'
+                  cmsSection === 'intro' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 About & Pillars
@@ -476,7 +475,7 @@ export const AdminPortal = () => {
               <button
                 onClick={() => setCmsSection('activities')}
                 className={`px-4 py-2 rounded-xl transition-all ${
-                  cmsSection === 'activities' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400'
+                  cmsSection === 'activities' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Activities Manager
@@ -484,8 +483,8 @@ export const AdminPortal = () => {
             </div>
 
             {cmsSaveSuccess && (
-              <div className="px-4 py-2 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-400 text-emerald-700 dark:text-emerald-300 text-xs font-mono flex items-center gap-2 animate-fadeIn">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <div className="px-4 py-2 rounded-xl bg-purple-950/70 border border-purple-500/50 text-purple-200 text-xs font-mono flex items-center gap-2 animate-fadeIn">
+                <CheckCircle2 className="w-4 h-4 text-purple-400" />
                 <span>Changes published live to website!</span>
               </div>
             )}
@@ -493,19 +492,19 @@ export const AdminPortal = () => {
 
           {/* Sub-Tab 1: HERO SECTION CMS */}
           {cmsSection === 'hero' && (
-            <form onSubmit={handleSaveHero} className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 space-y-5 bg-white/80 dark:bg-black/70">
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
+            <form onSubmit={handleSaveHero} className="glass-panel p-6 sm:p-8 rounded-3xl border border-purple-500/30 space-y-5 bg-[#0a0d16]">
+              <div className="flex items-center justify-between border-b border-purple-500/20 pb-4">
                 <div>
-                  <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-lg font-display font-bold text-white">
                     Edit Front Hero Section
                   </h3>
-                  <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <p className="text-xs font-mono text-purple-300/80">
                     Modify the banner, headings, description, and metric counters shown at the top of the site.
                   </p>
                 </div>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all"
+                  className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all"
                 >
                   <Save className="w-4 h-4" />
                   <span>Publish Live</span>
@@ -514,87 +513,87 @@ export const AdminPortal = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Top Pill Badge Text</label>
+                  <label className="block text-slate-300 mb-1">Top Pill Badge Text</label>
                   <input
                     type="text"
                     value={heroForm.badge}
                     onChange={(e) => setHeroForm({ ...heroForm, badge: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Department Sub-line</label>
+                  <label className="block text-slate-300 mb-1">Department Sub-line</label>
                   <input
                     type="text"
                     value={heroForm.departmentLine}
                     onChange={(e) => setHeroForm({ ...heroForm, departmentLine: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Title Part 1 (Regular)</label>
+                  <label className="block text-slate-300 mb-1">Title Part 1 (Regular)</label>
                   <input
                     type="text"
                     value={heroForm.titlePart1}
                     onChange={(e) => setHeroForm({ ...heroForm, titlePart1: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Title Highlight 1 (Gradient)</label>
+                  <label className="block text-slate-300 mb-1">Title Highlight 1 (Gradient)</label>
                   <input
                     type="text"
                     value={heroForm.titleHighlight1}
                     onChange={(e) => setHeroForm({ ...heroForm, titleHighlight1: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Title Part 2</label>
+                  <label className="block text-slate-300 mb-1">Title Part 2</label>
                   <input
                     type="text"
                     value={heroForm.titlePart2}
                     onChange={(e) => setHeroForm({ ...heroForm, titlePart2: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Title Highlight 2 (Gradient)</label>
+                  <label className="block text-slate-300 mb-1">Title Highlight 2 (Gradient)</label>
                   <input
                     type="text"
                     value={heroForm.titleHighlight2}
                     onChange={(e) => setHeroForm({ ...heroForm, titleHighlight2: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-mono text-slate-300 mb-1">
                   Hero Main Paragraph Description
                 </label>
                 <textarea
                   rows={3}
                   value={heroForm.description}
                   onChange={(e) => setHeroForm({ ...heroForm, description: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-sans focus:outline-none focus:border-purple-500 leading-relaxed"
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-sans focus:outline-none focus:border-purple-500 leading-relaxed"
                 />
               </div>
 
               {/* Stats Metrics Editor */}
-              <div className="pt-2 border-t border-slate-200 dark:border-white/10 space-y-3">
-                <h4 className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+              <div className="pt-2 border-t border-purple-500/20 space-y-3">
+                <h4 className="text-xs font-mono font-bold text-purple-300 uppercase tracking-wider">
                   Live Metric Cards (4 Highlights)
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {heroForm.stats?.map((st, idx) => (
-                    <div key={idx} className="p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 space-y-1.5">
-                      <label className="text-[10px] font-mono text-purple-600 dark:text-purple-400 font-bold block">
+                    <div key={idx} className="p-3 rounded-xl bg-purple-950/30 border border-purple-500/30 space-y-1.5">
+                      <label className="text-[10px] font-mono text-purple-300 font-bold block">
                         Metric {idx + 1}
                       </label>
                       <input
@@ -606,7 +605,7 @@ export const AdminPortal = () => {
                           updated[idx] = { ...updated[idx], value: e.target.value };
                           setHeroForm({ ...heroForm, stats: updated });
                         }}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/60 border border-slate-300 dark:border-white/15 text-xs font-bold text-slate-900 dark:text-white"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-black/60 border border-white/15 text-xs font-bold text-white focus:border-purple-500 focus:outline-none"
                       />
                       <input
                         type="text"
@@ -617,7 +616,7 @@ export const AdminPortal = () => {
                           updated[idx] = { ...updated[idx], label: e.target.value };
                           setHeroForm({ ...heroForm, stats: updated });
                         }}
-                        className="w-full px-2.5 py-1 rounded-lg bg-white dark:bg-black/60 border border-slate-300 dark:border-white/15 text-[11px] text-slate-700 dark:text-slate-300"
+                        className="w-full px-2.5 py-1 rounded-lg bg-black/60 border border-white/15 text-[11px] text-slate-300 focus:border-purple-500 focus:outline-none"
                       />
                     </div>
                   ))}
@@ -628,19 +627,19 @@ export const AdminPortal = () => {
 
           {/* Sub-Tab 2: INTRO & PILLARS CMS */}
           {cmsSection === 'intro' && (
-            <form onSubmit={handleSaveIntro} className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 space-y-5 bg-white/80 dark:bg-black/70">
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
+            <form onSubmit={handleSaveIntro} className="glass-panel p-6 sm:p-8 rounded-3xl border border-purple-500/30 space-y-5 bg-[#0a0d16]">
+              <div className="flex items-center justify-between border-b border-purple-500/20 pb-4">
                 <div>
-                  <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-lg font-display font-bold text-white">
                     Edit Club Intro, Mission & Vision
                   </h3>
-                  <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <p className="text-xs font-mono text-purple-300/80">
                     Modify the text rendered directly after the Hero page.
                   </p>
                 </div>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all"
+                  className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all"
                 >
                   <Save className="w-4 h-4" />
                   <span>Publish Live</span>
@@ -649,60 +648,60 @@ export const AdminPortal = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Badge</label>
+                  <label className="block text-slate-300 mb-1">Badge</label>
                   <input
                     type="text"
                     value={introForm.pillBadge}
                     onChange={(e) => setIntroForm({ ...introForm, pillBadge: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Subheading</label>
+                  <label className="block text-slate-300 mb-1">Subheading</label>
                   <input
                     type="text"
                     value={introForm.subheading}
                     onChange={(e) => setIntroForm({ ...introForm, subheading: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-mono text-slate-300 mb-1">
                   Club Overview Text
                 </label>
                 <textarea
                   rows={3}
                   value={introForm.overview}
                   onChange={(e) => setIntroForm({ ...introForm, overview: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-sans leading-relaxed"
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-sans leading-relaxed focus:outline-none focus:border-purple-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-mono text-slate-300 mb-1">
                     Mission Statement
                   </label>
                   <textarea
                     rows={3}
                     value={introForm.mission}
                     onChange={(e) => setIntroForm({ ...introForm, mission: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-sans leading-relaxed"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-sans leading-relaxed focus:outline-none focus:border-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-mono text-slate-300 mb-1">
                     Vision Statement
                   </label>
                   <textarea
                     rows={3}
                     value={introForm.vision}
                     onChange={(e) => setIntroForm({ ...introForm, vision: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-sans leading-relaxed"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-sans leading-relaxed focus:outline-none focus:border-purple-500"
                   />
                 </div>
               </div>
@@ -714,16 +713,16 @@ export const AdminPortal = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-display font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-base font-display font-bold text-white">
                     Live Activities & Workshops ({siteContent.activities?.length || 0})
                   </h3>
-                  <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <p className="text-xs font-mono text-purple-300/80">
                     Add new workshops or edit/delete existing events.
                   </p>
                 </div>
                 <button
                   onClick={() => setShowAddActivityModal(true)}
-                  className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-md"
+                  className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-md"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add New Event</span>
@@ -735,27 +734,27 @@ export const AdminPortal = () => {
                 {siteContent.activities?.map((act) => (
                   <div 
                     key={act.id} 
-                    className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-3 bg-white/90 dark:bg-black/80"
+                    className="glass-panel p-5 rounded-2xl border border-purple-500/30 flex flex-col justify-between space-y-3 bg-[#0a0d16]"
                   >
                     <div>
                       <div className="flex items-center justify-between text-[11px] font-mono mb-2">
-                        <span className="text-purple-600 dark:text-purple-400 font-semibold">{act.date}</span>
-                        <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 uppercase text-[10px]">
+                        <span className="text-purple-400 font-semibold">{act.date}</span>
+                        <span className="px-2 py-0.5 rounded bg-purple-950/60 border border-purple-500/30 uppercase text-[10px] text-purple-300">
                           {act.type || 'past'}
                         </span>
                       </div>
-                      <h4 className="font-display font-bold text-slate-900 dark:text-white text-sm mb-1">
+                      <h4 className="font-display font-bold text-white text-sm mb-1">
                         {act.title}
                       </h4>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 font-sans line-clamp-2">
+                      <p className="text-xs text-slate-300 font-sans line-clamp-2">
                         {act.summary}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+                    <div className="pt-3 border-t border-purple-500/20 flex items-center justify-between">
                       <button
                         onClick={() => handleStartEditActivity(act)}
-                        className="text-xs font-mono text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1"
+                        className="text-xs font-mono text-purple-300 hover:text-white flex items-center gap-1"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                         <span>Edit</span>
@@ -767,7 +766,7 @@ export const AdminPortal = () => {
                             deleteActivity(act.id);
                           }
                         }}
-                        className="text-xs font-mono text-rose-500 hover:underline flex items-center gap-1"
+                        className="text-xs font-mono text-slate-400 hover:text-white flex items-center gap-1"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         <span>Delete</span>
@@ -789,32 +788,32 @@ export const AdminPortal = () => {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <Search className="w-4 h-4 text-purple-400 absolute left-3.5 top-3" />
               <input
                 type="text"
                 placeholder="Search student doubt by text or ID..."
                 value={doubtSearch}
                 onChange={(e) => setDoubtSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-mono focus:outline-none"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-black/60 border border-purple-500/30 text-white text-xs font-mono focus:outline-none focus:border-purple-500"
               />
             </div>
 
             <div className="flex items-center gap-2 text-xs font-mono">
               <button
                 onClick={() => setDoubtFilter('all')}
-                className={`px-3 py-1.5 rounded-xl ${doubtFilter === 'all' ? 'bg-purple-600 text-white' : 'bg-white/5 text-slate-400'}`}
+                className={`px-3 py-1.5 rounded-xl ${doubtFilter === 'all' ? 'bg-purple-600 text-white' : 'bg-purple-950/30 text-purple-300'}`}
               >
                 All ({doubts.length})
               </button>
               <button
                 onClick={() => setDoubtFilter('pending')}
-                className={`px-3 py-1.5 rounded-xl ${doubtFilter === 'pending' ? 'bg-amber-600 text-white' : 'bg-white/5 text-slate-400'}`}
+                className={`px-3 py-1.5 rounded-xl ${doubtFilter === 'pending' ? 'bg-purple-600 text-white' : 'bg-purple-950/30 text-purple-300'}`}
               >
                 Pending ({doubts.filter(d => d.status === 'pending').length})
               </button>
               <button
                 onClick={() => setDoubtFilter('answered')}
-                className={`px-3 py-1.5 rounded-xl ${doubtFilter === 'answered' ? 'bg-emerald-600 text-white' : 'bg-white/5 text-slate-400'}`}
+                className={`px-3 py-1.5 rounded-xl ${doubtFilter === 'answered' ? 'bg-purple-600 text-white' : 'bg-purple-950/30 text-purple-300'}`}
               >
                 Answered ({doubts.filter(d => d.status === 'answered').length})
               </button>
@@ -823,18 +822,16 @@ export const AdminPortal = () => {
 
           <div className="space-y-3">
             {filteredDoubts.map((d) => (
-              <div key={d.id} className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 space-y-3 bg-white/90 dark:bg-black/70">
+              <div key={d.id} className="glass-panel p-5 rounded-2xl border border-purple-500/30 space-y-3 bg-[#0a0d16]">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-xs text-purple-600 dark:text-cyan-400">
+                    <span className="font-mono font-bold text-xs text-purple-300">
                       {d.id}
                     </span>
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase ${
-                      d.status === 'answered' ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-400/30' : 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-400/30 animate-pulse'
-                    }`}>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase bg-purple-950/60 text-purple-300 border border-purple-500/30">
                       {d.status}
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-white/5 text-slate-500">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/60 text-slate-400">
                       {d.category}
                     </span>
                   </div>
@@ -845,21 +842,21 @@ export const AdminPortal = () => {
                 </div>
 
                 <div>
-                  <h4 className="font-mono font-bold text-slate-900 dark:text-white text-xs mb-1">
+                  <h4 className="font-mono font-bold text-white text-xs mb-1">
                     {d.subject || 'Student Query'}
                   </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
+                  <p className="text-xs text-slate-300 leading-relaxed font-sans">
                     {d.query}
                   </p>
                 </div>
 
                 {d.adminReply ? (
-                  <div className="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-500/30 space-y-1">
-                    <div className="flex items-center justify-between text-[10px] font-mono text-purple-700 dark:text-purple-300 font-bold">
+                  <div className="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 space-y-1">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-purple-300 font-bold">
                       <span>Replied by: {d.repliedBy || 'Lead Coordinator'}</span>
                       <span>{d.repliedAt}</span>
                     </div>
-                    <p className="text-xs text-slate-700 dark:text-slate-300 font-sans">
+                    <p className="text-xs text-slate-200 font-sans">
                       {d.adminReply}
                     </p>
                   </div>
@@ -870,7 +867,7 @@ export const AdminPortal = () => {
                         setActiveDoubtReply(d);
                         setReplyText('');
                       }}
-                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-mono text-xs font-semibold flex items-center gap-1.5 shadow-sm"
+                      className="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold flex items-center gap-1.5 shadow-sm"
                     >
                       <MessageSquare className="w-3.5 h-3.5" />
                       <span>Write Public Answer</span>
@@ -878,7 +875,7 @@ export const AdminPortal = () => {
 
                     <button
                       onClick={() => updateDoubtStatus(d.id, 'answered')}
-                      className="text-xs font-mono text-slate-500 hover:text-emerald-500"
+                      className="text-xs font-mono text-purple-400 hover:text-white"
                     >
                       Mark as Resolved
                     </button>
@@ -897,32 +894,32 @@ export const AdminPortal = () => {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <Search className="w-4 h-4 text-purple-400 absolute left-3.5 top-3" />
               <input
                 type="text"
                 placeholder="Search applicants by name, USN, or email..."
                 value={memberSearch}
                 onChange={(e) => setMemberSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-mono focus:outline-none"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-black/60 border border-purple-500/30 text-white text-xs font-mono focus:outline-none focus:border-purple-500"
               />
             </div>
 
             <div className="flex items-center gap-2 text-xs font-mono">
               <button
                 onClick={() => setMemberFilter('all')}
-                className={`px-3 py-1.5 rounded-xl ${memberFilter === 'all' ? 'bg-purple-600 text-white' : 'bg-white/5 text-slate-400'}`}
+                className={`px-3 py-1.5 rounded-xl ${memberFilter === 'all' ? 'bg-purple-600 text-white' : 'bg-purple-950/30 text-purple-300'}`}
               >
                 All ({memberships.length})
               </button>
               <button
                 onClick={() => setMemberFilter('pending')}
-                className={`px-3 py-1.5 rounded-xl ${memberFilter === 'pending' ? 'bg-amber-600 text-white' : 'bg-white/5 text-slate-400'}`}
+                className={`px-3 py-1.5 rounded-xl ${memberFilter === 'pending' ? 'bg-purple-600 text-white' : 'bg-purple-950/30 text-purple-300'}`}
               >
                 Pending ({memberships.filter(m => m.status === 'pending').length})
               </button>
               <button
                 onClick={() => setMemberFilter('approved')}
-                className={`px-3 py-1.5 rounded-xl ${memberFilter === 'approved' ? 'bg-emerald-600 text-white' : 'bg-white/5 text-slate-400'}`}
+                className={`px-3 py-1.5 rounded-xl ${memberFilter === 'approved' ? 'bg-purple-600 text-white' : 'bg-purple-950/30 text-purple-300'}`}
               >
                 Approved ({memberships.filter(m => m.status === 'approved').length})
               </button>
@@ -931,21 +928,19 @@ export const AdminPortal = () => {
 
           <div className="space-y-3">
             {filteredMemberships.map((m) => (
-              <div key={m.id} className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/90 dark:bg-black/70">
+              <div key={m.id} className="glass-panel p-5 rounded-2xl border border-purple-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0a0d16]">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-display font-bold text-sm text-slate-900 dark:text-white">{m.name}</span>
-                    <span className="text-xs font-mono text-purple-600 dark:text-cyan-400 font-semibold">({m.usn})</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase ${
-                      m.status === 'approved' ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300' : 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300'
-                    }`}>
+                    <span className="font-display font-bold text-sm text-white">{m.name}</span>
+                    <span className="text-xs font-mono text-purple-300 font-semibold">({m.usn})</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase bg-purple-950/60 text-purple-300 border border-purple-500/30">
                       {m.status}
                     </span>
                   </div>
-                  <div className="text-xs font-mono text-slate-500">
+                  <div className="text-xs font-mono text-slate-400">
                     {m.dept} • {m.year} • {m.email}
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 italic pt-1">
+                  <p className="text-xs text-slate-300 italic pt-1">
                     "{m.interests || m.motivation || 'Interested in Autonomous Agents & AI Systems'}"
                   </p>
                 </div>
@@ -954,7 +949,7 @@ export const AdminPortal = () => {
                   {m.status === 'pending' && (
                     <button
                       onClick={() => updateMembershipStatus(m.id, 'approved')}
-                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold flex items-center gap-1 shadow-sm"
+                      className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold flex items-center gap-1 shadow-sm"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" /> Approve
                     </button>
@@ -977,24 +972,24 @@ export const AdminPortal = () => {
       {/* ----------------------------------------------------------- */}
       {activeTab === 'broadcast' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 space-y-4 bg-white/90 dark:bg-black/70">
-            <h3 className="text-base font-display font-bold text-slate-900 dark:text-white">
+          <div className="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl border border-purple-500/30 space-y-4 bg-[#0a0d16]">
+            <h3 className="text-base font-display font-bold text-white">
               Broadcast Real-time Announcement
             </h3>
-            <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+            <p className="text-xs font-mono text-purple-300/80">
               Posts an immediate notification banner that pops up on all visitor screens.
             </p>
 
             {notifSuccess && (
-              <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-400 text-emerald-700 dark:text-emerald-300 text-xs font-mono flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <div className="p-3 rounded-xl bg-purple-950/60 border border-purple-500/40 text-purple-200 text-xs font-mono flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-purple-400" />
                 <span>Announcement published to live notification feed!</span>
               </div>
             )}
 
             <form onSubmit={handlePostNotification} className="space-y-4 text-xs font-mono">
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 mb-1 font-semibold">
+                <label className="block text-slate-300 mb-1 font-semibold">
                   Announcement Title *
                 </label>
                 <input
@@ -1003,12 +998,12 @@ export const AdminPortal = () => {
                   placeholder="e.g. Agentforce Dev Summit 2026 Registrations Open"
                   value={notifForm.title}
                   onChange={(e) => setNotifForm({ ...notifForm, title: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 mb-1 font-semibold">
+                <label className="block text-slate-300 mb-1 font-semibold">
                   Notification Message *
                 </label>
                 <textarea
@@ -1017,29 +1012,29 @@ export const AdminPortal = () => {
                   placeholder="Details regarding venue, schedule, or prerequisites..."
                   value={notifForm.message}
                   onChange={(e) => setNotifForm({ ...notifForm, message: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1 font-semibold">Urgency Level</label>
+                  <label className="block text-slate-300 mb-1 font-semibold">Urgency Level</label>
                   <select
                     value={notifForm.urgency}
                     onChange={(e) => setNotifForm({ ...notifForm, urgency: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500"
                   >
-                    <option value="high">High (Red Pulse)</option>
-                    <option value="normal">Normal (Purple)</option>
+                    <option value="high">High Priority</option>
+                    <option value="normal">Standard</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1 font-semibold">Target Audience</label>
+                  <label className="block text-slate-300 mb-1 font-semibold">Target Audience</label>
                   <select
                     value={notifForm.audience}
                     onChange={(e) => setNotifForm({ ...notifForm, audience: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500"
                   >
                     <option value="all">All Engineering Students</option>
                     <option value="club">AgentBlazer Members Only</option>
@@ -1049,25 +1044,25 @@ export const AdminPortal = () => {
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold transition-all shadow-md"
+                className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-all shadow-md"
               >
                 Broadcast Announcement
               </button>
             </form>
           </div>
 
-          <div className="lg:col-span-5 glass-panel p-6 rounded-3xl border border-slate-200 dark:border-white/10 space-y-3 bg-white/90 dark:bg-black/70">
-            <h4 className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+          <div className="lg:col-span-5 glass-panel p-6 rounded-3xl border border-purple-500/30 space-y-3 bg-[#0a0d16]">
+            <h4 className="text-xs font-mono font-bold text-purple-300 uppercase tracking-wider">
               Active Broadcast Stream ({notifications.length})
             </h4>
             <div className="space-y-2.5 max-h-[400px] overflow-y-auto">
               {notifications.map((n) => (
-                <div key={n.id} className="p-3.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 space-y-1">
+                <div key={n.id} className="p-3.5 rounded-xl bg-purple-950/20 border border-purple-500/30 space-y-1">
                   <div className="flex items-center justify-between text-[11px] font-mono">
-                    <span className="font-bold text-purple-600 dark:text-purple-400">{n.title}</span>
+                    <span className="font-bold text-purple-300">{n.title}</span>
                     <span className="text-slate-400">{n.date}</span>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 font-sans">
+                  <p className="text-xs text-slate-300 font-sans">
                     {n.message}
                   </p>
                 </div>
@@ -1078,26 +1073,26 @@ export const AdminPortal = () => {
       )}
 
       {/* ----------------------------------------------------------- */}
-      {/* TAB 5: SETTINGS & DATABASE RESET */}
+      {/* TAB 5: RESET DEFAULTS */}
       {/* ----------------------------------------------------------- */}
       {activeTab === 'settings' && (
-        <div className="max-w-2xl mx-auto glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 space-y-6 bg-white/90 dark:bg-black/70">
+        <div className="max-w-2xl mx-auto glass-panel p-6 sm:p-8 rounded-3xl border border-purple-500/30 space-y-6 bg-[#0a0d16]">
           <div>
-            <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white">
-              System Settings & Data Recovery
+            <h3 className="text-lg font-display font-bold text-white">
+              System Settings & Factory Reset
             </h3>
-            <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
-              Manage database backups and reset site content to official defaults.
+            <p className="text-xs font-mono text-purple-300/80">
+              Restore default site content whenever needed.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-500/40 text-xs font-mono text-amber-800 dark:text-amber-300 space-y-2">
-            <div className="flex items-center gap-2 font-bold">
-              <AlertCircle className="w-4 h-4" />
-              <span>Reset to Official Defaults</span>
+          <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-500/30 text-xs font-mono text-purple-200 space-y-3">
+            <div className="flex items-center gap-2 font-bold text-white">
+              <AlertCircle className="w-4 h-4 text-purple-400" />
+              <span>Reset Website Content to Factory Defaults</span>
             </div>
-            <p>
-              If you ever make accidental edits or want to reload the official inaugurational charter and activities, you can reset the live CMS content with one click.
+            <p className="text-slate-300 leading-relaxed font-sans">
+              If you want to reset all titles, descriptions, and activities back to the official inaugurated charter, click below.
             </p>
             <button
               onClick={() => {
@@ -1106,14 +1101,14 @@ export const AdminPortal = () => {
                   alert("Website content successfully restored to defaults.");
                 }
               }}
-              className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold transition-all shadow-sm"
+              className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-all shadow-sm"
             >
               Reset All Content to Factory Defaults
             </button>
           </div>
 
-          <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-500">
-            <span>AgentBlazer Platform v2.5 Enterprise</span>
+          <div className="pt-4 border-t border-purple-500/20 flex items-center justify-between text-xs font-mono text-slate-400">
+            <span>AgentBlazer Platform v2.5</span>
             <span>SJEC CSE Dept</span>
           </div>
         </div>
@@ -1124,23 +1119,23 @@ export const AdminPortal = () => {
       {/* ----------------------------------------------------------- */}
       {activeDoubtReply && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative max-w-lg w-full glass-panel p-6 rounded-3xl border border-cyan-500/40 shadow-2xl bg-white dark:bg-black/95 space-y-4">
-            <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">
+          <div className="relative max-w-lg w-full glass-panel p-6 rounded-3xl border border-purple-500/40 shadow-2xl bg-[#0a0d16] space-y-4">
+            <h3 className="font-display font-bold text-base text-white">
               Answer Student Ticket: {activeDoubtReply.id}
             </h3>
             
-            <div className="p-3.5 rounded-xl bg-slate-100 dark:bg-white/5 text-xs font-mono text-slate-600 dark:text-slate-300">
-              <strong className="block text-slate-900 dark:text-white mb-1">{activeDoubtReply.subject}</strong>
+            <div className="p-3.5 rounded-xl bg-purple-950/30 border border-purple-500/30 text-xs font-mono text-slate-300">
+              <strong className="block text-white mb-1">{activeDoubtReply.subject}</strong>
               <p className="font-sans">{activeDoubtReply.query}</p>
             </div>
 
             <form onSubmit={handleSendDoubtReply} className="space-y-4 text-xs font-mono">
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 mb-1">Answering Coordinator Signature</label>
+                <label className="block text-slate-300 mb-1">Answering Coordinator Signature</label>
                 <select
                   value={repliedBy}
                   onChange={(e) => setRepliedBy(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500"
                 >
                   <option>Keith Fernandes (Faculty Lead)</option>
                   <option>Nisha Roche (Faculty Lead)</option>
@@ -1151,14 +1146,14 @@ export const AdminPortal = () => {
               </div>
 
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 mb-1">Official Response *</label>
+                <label className="block text-slate-300 mb-1">Official Response *</label>
                 <textarea
                   rows={4}
                   required
                   placeholder="Type clear resolution or guidance here..."
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-400 font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500 font-sans"
                 />
               </div>
 
@@ -1166,13 +1161,13 @@ export const AdminPortal = () => {
                 <button
                   type="button"
                   onClick={() => setActiveDoubtReply(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-slate-300"
+                  className="px-4 py-2 rounded-xl bg-white/10 text-slate-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-bold"
+                  className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold"
                 >
                   Send & Publish Answer
                 </button>
@@ -1187,92 +1182,92 @@ export const AdminPortal = () => {
       {/* ----------------------------------------------------------- */}
       {(showAddActivityModal || editingActivity) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative max-w-xl w-full glass-panel p-6 sm:p-7 rounded-3xl border border-cyan-500/40 shadow-2xl bg-white dark:bg-black/95 space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">
+          <div className="relative max-w-xl w-full glass-panel p-6 sm:p-7 rounded-3xl border border-purple-500/40 shadow-2xl bg-[#0a0d16] space-y-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="font-display font-bold text-base text-white">
               {editingActivity ? `Edit Activity: ${editingActivity.title}` : "Add New Event / Workshop"}
             </h3>
 
             <form onSubmit={handleSaveActivity} className="space-y-4 text-xs font-mono">
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 mb-1">Event Title *</label>
+                <label className="block text-slate-300 mb-1">Event Title *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Autonomous Agents Bootcamp 2026"
                   value={activityForm.title}
                   onChange={(e) => setActivityForm({ ...activityForm, title: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Date</label>
+                  <label className="block text-slate-300 mb-1">Date</label>
                   <input
                     type="text"
                     placeholder="e.g. October 15, 2026"
                     value={activityForm.date}
                     onChange={(e) => setActivityForm({ ...activityForm, date: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Venue</label>
+                  <label className="block text-slate-300 mb-1">Venue</label>
                   <input
                     type="text"
                     placeholder="e.g. Advanced Computing Lab, SJEC"
                     value={activityForm.venue}
                     onChange={(e) => setActivityForm({ ...activityForm, venue: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Category</label>
+                  <label className="block text-slate-300 mb-1">Category</label>
                   <input
                     type="text"
                     placeholder="e.g. Hands-on Workshop"
                     value={activityForm.category}
                     onChange={(e) => setActivityForm({ ...activityForm, category: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Badge Tag</label>
+                  <label className="block text-slate-300 mb-1">Badge Tag</label>
                   <input
                     type="text"
                     placeholder="e.g. Flagship Bootcamp"
                     value={activityForm.tag}
                     onChange={(e) => setActivityForm({ ...activityForm, tag: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 mb-1">Summary Description *</label>
+                <label className="block text-slate-300 mb-1">Summary Description *</label>
                 <textarea
                   rows={3}
                   required
                   placeholder="Summary of the event..."
                   value={activityForm.summary}
                   onChange={(e) => setActivityForm({ ...activityForm, summary: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white font-sans"
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white font-sans focus:border-purple-500"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 mb-1">Key Highlights (Comma Separated)</label>
+                <label className="block text-slate-300 mb-1">Key Highlights (Comma Separated)</label>
                 <input
                   type="text"
                   placeholder="e.g. LangChain, Multi-Agent, Vector Search, Live Deployment"
                   value={activityForm.highlights}
                   onChange={(e) => setActivityForm({ ...activityForm, highlights: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-500"
                 />
               </div>
 
@@ -1283,13 +1278,13 @@ export const AdminPortal = () => {
                     setShowAddActivityModal(false);
                     setEditingActivity(null);
                   }}
-                  className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-slate-300"
+                  className="px-4 py-2 rounded-xl bg-white/10 text-slate-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-bold shadow-md"
+                  className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold shadow-md"
                 >
                   {editingActivity ? "Save Changes" : "Create Event"}
                 </button>
