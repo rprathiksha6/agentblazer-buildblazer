@@ -1,27 +1,27 @@
 export const INITIAL_NOTIFICATIONS = [
   {
     id: "notif-1",
-    title: "Phase 2 Build Blazer Kickoff!",
-    message: "Third-year teams can now fork the official repository and submit their live deployment links before the countdown ends.",
-    date: "Sep 21, 2026",
+    title: "AgentBlazer Club Membership Intake Open!",
+    message: "Students across all engineering departments (1st to 4th year) can apply to become official club members. Early applicants get priority access to hands-on cloud labs.",
+    date: "Sep 23, 2026",
     urgency: "high", // high, normal, info
     read: false,
     audience: "all"
   },
   {
     id: "notif-2",
-    title: "Mentor Office Hours with Stevin Dsouza",
-    message: "Tech Lead Stevin Dsouza is holding open review sessions for git fork troubleshooting today in CSE Lab 3.",
-    date: "Sep 20, 2026",
+    title: "Agentforce Technical Masterclass Announced",
+    message: "Salesforce industry mentors will conduct an exclusive session on enterprise agent workflows and Data Cloud integration in Prerana Hall.",
+    date: "Sep 22, 2026",
     urgency: "normal",
     read: false,
     audience: "students"
   },
   {
     id: "notif-3",
-    title: "Agentforce Dev Summit Pre-Registrations Open",
-    message: "Early bird access for the upcoming Agentforce Summit on November 18, 2026 is now live in the Activities tab.",
-    date: "Sep 18, 2026",
+    title: "Prompt Ops-2K26 Certificates Dispatched",
+    message: "Participation and winner certificates for both Beginner and Pro tracks of Prompt Ops have been issued through the CSE Department.",
+    date: "Sep 20, 2026",
     urgency: "info",
     read: true,
     audience: "all"
@@ -36,13 +36,13 @@ export const INITIAL_DOUBTS = [
     email: "rahul.23cs@sjec.ac.in",
     dept: "Computer Science & Engg",
     year: "3rd Year",
-    category: "Build Blazer Phase 2",
-    subject: "Can we use Next.js App Router for deployment?",
-    query: "Our team wants to use Next.js 15 with Tailwind and deploy on Vercel. Is App Router allowed or do we need purely static HTML/client-side React?",
+    category: "Workshops & Hands-on Labs",
+    subject: "Prerequisites for Autonomous Agents Workshop",
+    query: "Do we need prior experience with LangChain or Python to attend the upcoming Autonomous Agents Hands-on Workshop?",
     status: "answered", // pending, in-review, answered
-    adminReply: "Yes, absolutely! Next.js App Router deployed on Vercel is completely acceptable as long as it adheres strictly to the Figma design.",
-    submittedAt: "2026-09-21 14:30",
-    repliedAt: "2026-09-21 16:15",
+    adminReply: "No advanced prerequisites are required! A foundational knowledge of Python and APIs is sufficient. Our mentors will guide you from scratch.",
+    submittedAt: "2026-09-22 14:30",
+    repliedAt: "2026-09-22 16:15",
     repliedBy: "Stevin Dsouza (Tech Lead)"
   },
   {
@@ -51,13 +51,13 @@ export const INITIAL_DOUBTS = [
     usn: "4SO23CS019",
     email: "ananya.23cs@sjec.ac.in",
     dept: "Computer Science & Engg",
-    year: "3rd Year",
-    category: "Workshops & Certifications",
-    subject: "Certificate distribution for Agentforce Symposium",
-    query: "Hello coordinators, when will the participation e-certificates for the August 25 Agentforce Symposium be dispatched?",
+    year: "2nd Year",
+    category: "Club Membership & Intake",
+    subject: "How are member teams structured?",
+    query: "Hello coordinators, after joining AgentBlazer Club, will we be grouped into project cohorts according to our interest tracks?",
     status: "pending",
     adminReply: null,
-    submittedAt: "2026-09-21 18:45",
+    submittedAt: "2026-09-22 18:45",
     repliedAt: null,
     repliedBy: null
   },
@@ -66,66 +66,51 @@ export const INITIAL_DOUBTS = [
     studentName: "Karthik Nayak",
     usn: "4SO22CS088",
     email: "karthik.22cs@sjec.ac.in",
-    dept: "Computer Science & Engg",
+    dept: "Artificial Intelligence & ML",
     year: "4th Year",
-    category: "Autonomous Agents",
-    subject: "Hardware requirements for Agentic AI Hackfest",
-    query: "Are local GPU workstations provided during the 24h Hackfest, or will cloud credits (like Google Cloud/AWS) be provided to participants?",
+    category: "Salesforce Trailhead & Agentforce",
+    subject: "Developer Sandbox Org Access",
+    query: "Will club members get free access to Salesforce Trailhead developer orgs with Agentforce licenses enabled?",
     status: "in-review",
-    adminReply: "We are coordinating with Salesforce and SJEC cloud lab to provide cloud sandbox credits to all approved teams.",
-    submittedAt: "2026-09-20 20:10",
-    repliedAt: "2026-09-21 09:20",
+    adminReply: "Yes, active club members receive special Trailhead org credentials with Agentforce features enabled for experiential learning.",
+    submittedAt: "2026-09-21 20:10",
+    repliedAt: "2026-09-22 09:20",
     repliedBy: "Frenny Saldanha (Resource Head)"
   }
 ];
 
-export const INITIAL_SUBMISSIONS = [
+export const INITIAL_MEMBERSHIPS = [
   {
-    id: "SUB-801",
-    teamName: "NeuralBlazers",
-    teamLead: "Sanjay Rao",
-    leadUsn: "4SO23CS165",
-    leadEmail: "sanjay.23cs@sjec.ac.in",
-    members: ["Sanjay Rao (4SO23CS165)", "Deepa Bhat (4SO23CS045)", "Nihal Crasta (4SO23CS112)"],
-    figmaUrl: "https://www.figma.com/file/sample-agentblazer-track-a",
-    githubRepoUrl: "https://github.com/NeuralBlazers/agentblazer-buildblazer-p2",
-    deployedUrl: "https://neural-blazer-sjec.vercel.app",
-    techStack: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
-    status: "approved", // pending, under_review, approved, needs_revision
-    score: 92,
-    feedback: "Exceptional design fidelity and smooth responsive navigation. Great commit history.",
-    submittedAt: "2026-09-21 11:20"
+    id: "MEM-201",
+    name: "Prajwal Royston",
+    usn: "4SO23CS124",
+    email: "prajwal.23cs@sjec.ac.in",
+    year: "3rd Year",
+    dept: "Computer Science & Engg",
+    interests: "Autonomous Agents, LLM Fine-tuning",
+    status: "approved", // pending, approved
+    appliedAt: "2026-09-22 11:30"
   },
   {
-    id: "SUB-802",
-    teamName: "CodeSentinels",
-    teamLead: "Prateeksha Kamath",
-    leadUsn: "4SO23CS134",
-    leadEmail: "prateeksha.23cs@sjec.ac.in",
-    members: ["Prateeksha Kamath (4SO23CS134)", "Varun Shenoy (4SO23CS198)"],
-    figmaUrl: "https://www.figma.com/file/sample-agentblazer-track-b",
-    githubRepoUrl: "https://github.com/CodeSentinels/agentblazer-buildblazer",
-    deployedUrl: "https://codesentinels-agentblazer.netlify.app",
-    techStack: ["Next.js", "Tailwind CSS", "Lucide React"],
-    status: "under_review",
-    score: null,
-    feedback: "Reviewing responsiveness on mobile viewports.",
-    submittedAt: "2026-09-21 16:45"
+    id: "MEM-202",
+    name: "Sneha Rao",
+    usn: "4SO24AI045",
+    email: "sneha.24ai@sjec.ac.in",
+    year: "2nd Year",
+    dept: "Artificial Intelligence & ML",
+    interests: "Salesforce Trailhead, Python Agents",
+    status: "approved",
+    appliedAt: "2026-09-22 15:40"
   },
   {
-    id: "SUB-803",
-    teamName: "Agentic Forge",
-    teamLead: "Melvin Noronha",
-    leadUsn: "4SO23CS101",
-    leadEmail: "melvin.23cs@sjec.ac.in",
-    members: ["Melvin Noronha (4SO23CS101)", "Adithya Poojary (4SO23CS008)", "Bhavana Rai (4SO23CS033)"],
-    figmaUrl: "https://www.figma.com/file/sample-agentblazer-track-c",
-    githubRepoUrl: "https://github.com/AgenticForge/buildblazer-fork",
-    deployedUrl: "https://agenticforge-sjec.pages.dev",
-    techStack: ["React", "CSS Modules", "Vite"],
-    status: "needs_revision",
-    score: 74,
-    feedback: "Footer alignment is breaking on smaller displays, and README is missing member roles. Please update your fork and redeploy.",
-    submittedAt: "2026-09-20 22:15"
+    id: "MEM-203",
+    name: "Gautham Prabhu",
+    usn: "4SO23IS038",
+    email: "gautham.23is@sjec.ac.in",
+    year: "3rd Year",
+    dept: "Information Science",
+    interests: "Full-Stack AI, LangGraph, DevOps",
+    status: "pending",
+    appliedAt: "2026-09-23 09:15"
   }
 ];

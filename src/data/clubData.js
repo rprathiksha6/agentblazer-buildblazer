@@ -97,7 +97,7 @@ export const STUDENT_CORE_TEAM = [
     role: "Student President",
     badge: "Student President",
     photo: rubenPhoto,
-    desc: "Delivered the Vote of Thanks at the August 28, 2025 inauguration. Spearheading club vision, university workshops, and the Build Blazer Phase 2 challenge.",
+    desc: "Delivered the Vote of Thanks at the August 28, 2025 inauguration. Spearheading club vision, university workshops, autonomous agent research, and collaborative industry sessions.",
     year: "4th Year CSE",
     phone: "+91 98765 43210",
     email: "ruben.22cs@sjec.ac.in"
@@ -120,7 +120,7 @@ export const STUDENT_CORE_TEAM = [
     badge: "Tech Lead",
     photo: null,
     initials: "SD",
-    desc: "Technical architectures, Build Blazer repository supervision, hands-on lab environments, code review, and git PR mentoring.",
+    desc: "Technical architectures, autonomous agent lab supervision, hands-on developer environments, code review, and project mentoring.",
     year: "3rd Year CSE",
     email: "stevin.23cs@sjec.ac.in"
   },
@@ -267,18 +267,18 @@ export const ACTIVITIES = [
     highlights: ["Sales Email Prompt Templates", "Flex Prompt Templates", "Automated Prompt Flows", "Salesforce Trailhead Dev Orgs"]
   },
   {
-    id: "act-build-blazer-live",
+    id: "act-bootcamp-2026",
     type: "upcoming",
-    title: "Build Blazer — Phase 2: Design to Live Deployment",
-    date: "Ongoing • Active Sprint",
-    venue: "Online & GitHub / SJEC CSE Labs",
-    category: "Live Build Sprint",
-    tag: "Featured Sprint",
-    attendees: "Third-Year Teams",
+    title: "Autonomous Agents & LangGraph Bootcamp",
+    date: "October 10, 2026",
+    venue: "Advanced Computing Lab, SJEC",
+    category: "Hands-on Bootcamp",
+    tag: "Upcoming Sprints",
+    attendees: "All Branches Welcome",
     image: campusPhoto,
     poster: null,
-    summary: "Turn winning Phase 1 Figma designs into high-performance, deployed web applications. Fork the official repo, build, commit cleanly, and deploy to Vercel/Netlify.",
-    highlights: ["Fork & Build Workflow", "Figma Design Fidelity", "Automated Submission Verification", "Live Evaluation"]
+    summary: "Intensive multi-agent orchestration bootcamp covering LangChain, LangGraph state machines, vector databases, and multi-turn autonomous tool execution.",
+    highlights: ["LangGraph State Workflows", "Vector Search & Retrieval", "Multi-Agent Collaboration", "Tool Calling Architecture"]
   },
   {
     id: "act-dev-summit-2026",
@@ -310,20 +310,5 @@ export const ACTIVITIES = [
   }
 ];
 
-export const BUILD_BLAZER_INFO = {
-  phase: "Phase 2: Live Build & Deployment",
-  repoUrl: "https://github.com/AgentBlazer/agentblazer-buildblazer.git",
-  steps: [
-    { step: 1, title: "Fork Repository", desc: "Fork the official agentblazer-buildblazer repo to your GitHub account." },
-    { step: 2, title: "Clone & Implement", desc: "Clone locally, set up modern stack (React/Vite/Tailwind), and match assigned Figma design." },
-    { step: 3, title: "Commit Regularly", desc: "Commit small, meaningful commits demonstrating team collaboration and git hygiene." },
-    { step: 4, title: "Deploy Live", desc: "Deploy your project to Vercel, Netlify, or Cloudflare Pages with SSL." },
-    { step: 5, title: "Submit Details", desc: "Submit your team lead, member USNs, GitHub fork link, and live URL via the portal." }
-  ],
-  rubric: [
-    { title: "Design Fidelity", weight: "30%", desc: "Precision matching assigned Figma design, typography, spacing, and brand identity." },
-    { title: "Code Quality & Git Hygiene", weight: "25%", desc: "Modular architecture, clean React components, semantic commits, and zero build warnings." },
-    { title: "Responsiveness & UX", weight: "25%", desc: "Flawless mobile, tablet, and widescreen layouts with snappy transitions." },
-    { title: "Deployment & Functionality", weight: "20%", desc: "Fast LCP, active live domain, interactive features, and accessible UI." }
-  ]
-};
+export const OFFICIAL_ACTIVITIES = ACTIVITIES;
+

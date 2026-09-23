@@ -13,7 +13,7 @@ export const AskDoubtSection = () => {
     email: '',
     dept: 'Computer Science & Engg',
     year: '3rd Year',
-    category: 'Build Blazer Phase 2',
+    category: 'Autonomous Agents & LLMs',
     subject: '',
     query: ''
   });
@@ -48,7 +48,7 @@ export const AskDoubtSection = () => {
       email: '',
       dept: 'Computer Science & Engg',
       year: '3rd Year',
-      category: 'Build Blazer Phase 2',
+      category: 'Autonomous Agents & LLMs',
       subject: '',
       query: ''
     });
@@ -249,12 +249,11 @@ export const AskDoubtSection = () => {
                       onChange={(e) => setForm({ ...form, category: e.target.value })}
                       className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-mono focus:border-purple-400 focus:outline-none"
                     >
-                      <option>Build Blazer Phase 2</option>
+                      <option>Autonomous Agents & LLMs</option>
                       <option>Workshops & Certifications</option>
-                      <option>Autonomous Agents</option>
-                      <option>Salesforce Trailblazer</option>
+                      <option>Salesforce Trailblazer & Agentforce</option>
                       <option>Club Membership & Governance</option>
-                      <option>General Tech Query</option>
+                      <option>General Tech & Bug Query</option>
                     </select>
                   </div>
 
@@ -265,7 +264,7 @@ export const AskDoubtSection = () => {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Next.js deployment on Vercel"
+                      placeholder="e.g. Multi-agent state orchestration question"
                       value={form.subject}
                       onChange={(e) => setForm({ ...form, subject: e.target.value })}
                       className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-mono focus:border-purple-400 focus:outline-none"

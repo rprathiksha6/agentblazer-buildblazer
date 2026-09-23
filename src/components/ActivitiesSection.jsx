@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
+import { useClub } from '../context/ClubContext';
 import { ACTIVITIES } from '../data/clubData';
 import { Calendar, MapPin, Users, Sparkles, CheckCircle2, ArrowRight, Clock, Image as ImageIcon, X, ExternalLink, Award, Eye } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export const ActivitiesSection = () => {
+  const { siteContent } = useClub();
+  const allActivities = siteContent?.activities || ACTIVITIES;
+
   const [filter, setFilter] = useState('all'); // 'all', 'past', 'upcoming'
   const [selectedGalleryEvent, setSelectedGalleryEvent] = useState(null);
   const [rsvpModalEvent, setRsvpModalEvent] = useState(null);
   const [rsvpData, setRsvpData] = useState({ name: '', usn: '', email: '', year: '3rd Year' });
   const [rsvpSuccess, setRsvpSuccess] = useState(false);
 
-  const filteredActivities = ACTIVITIES.filter(act => {
+  const filteredActivities = allActivities.filter(act => {
     if (filter === 'upcoming') return act.type === 'upcoming';
     if (filter === 'past') return act.type === 'past';
     return true;
@@ -64,7 +68,7 @@ export const ActivitiesSection = () => {
                   : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              All Events ({ACTIVITIES.length})
+              All Events ({allActivities.length})
             </button>
             <button
               onClick={() => setFilter('past')}
@@ -74,7 +78,7 @@ export const ActivitiesSection = () => {
                   : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Conducted ({ACTIVITIES.filter(a => a.type === 'past').length})
+              Conducted ({allActivities.filter(a => a.type === 'past').length})
             </button>
             <button
               onClick={() => setFilter('upcoming')}
@@ -84,7 +88,7 @@ export const ActivitiesSection = () => {
                   : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Upcoming ({ACTIVITIES.filter(a => a.type === 'upcoming').length})
+              Upcoming ({allActivities.filter(a => a.type === 'upcoming').length})
             </button>
           </div>
         </div>

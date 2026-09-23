@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import { useClub } from '../context/ClubContext';
 import { FACULTY_COUNCIL, STUDENT_CORE_TEAM } from '../data/clubData';
 import { Users, User, ExternalLink, Sparkles, X, Eye, Mail, Phone, ShieldCheck, Award } from 'lucide-react';
 
 export const MembersSection = () => {
+  const { siteContent } = useClub();
+  const facultyList = siteContent?.faculty || FACULTY_COUNCIL;
+  const studentList = siteContent?.students || STUDENT_CORE_TEAM;
+
   const [selectedMember, setSelectedMember] = useState(null);
 
   return (
@@ -35,7 +40,7 @@ export const MembersSection = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {FACULTY_COUNCIL.map((faculty) => (
+            {facultyList.map((faculty) => (
               <div 
                 key={faculty.name}
                 onClick={() => setSelectedMember(faculty)}
@@ -108,7 +113,7 @@ export const MembersSection = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {STUDENT_CORE_TEAM.map((student) => (
+            {studentList.map((student) => (
               <div 
                 key={student.name}
                 onClick={() => setSelectedMember(student)}

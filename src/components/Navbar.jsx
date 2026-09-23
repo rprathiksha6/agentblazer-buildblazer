@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { useClub } from '../context/ClubContext';
 import agentblazerLogo from '../assets/agentblazer-logo.png';
-import { Bell, ShieldCheck, Terminal, Menu, X, ArrowRight, Sun, Moon, Palette } from 'lucide-react';
+import { Bell, ShieldCheck, Terminal, Menu, X, ArrowRight, Sun, Moon, Play } from 'lucide-react';
 
 export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
-  const { theme, toggleTheme, accentColor, setAccentColor, portalView, setPortalView, unreadNotifCount } = useClub();
+  const { theme, toggleTheme, accentColor, setAccentColor, portalView, setPortalView, unreadNotifCount, triggerReplayIntro } = useClub();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { label: 'Home', href: '#home' },
-    { label: 'About Us', href: '#about-section' },
-    { label: 'Events & Workshops', href: '#activities-section' },
+    { label: 'About Club', href: '#about-club' },
+    { label: 'Workshops & Events', href: '#activities-section' },
     { label: 'Leadership', href: '#members-section' },
-    { label: 'Build Blazer', href: '#buildblazer-section' },
     { label: 'Ask Doubt', href: '#ask-doubt-section' },
-    { label: 'Join & Connect', href: '#join-connect-section' },
+    { label: 'Join Club', href: '#join-connect-section' },
   ];
 
   const handleNavClick = (e, href) => {
@@ -23,10 +22,12 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
     if (portalView === 'admin') {
       setPortalView('student');
     }
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    setTimeout(() => {
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 50);
   };
 
   return (
@@ -40,7 +41,7 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
             onClick={(e) => handleNavClick(e, '#home')}
             className="flex items-center gap-3 group"
           >
-            <div className="relative w-12 h-12 flex items-center justify-center p-1 rounded-xl bg-purple-100 dark:bg-purple-950/50 border border-purple-300/60 dark:border-purple-500/30 group-hover:border-purple-500 transition-all duration-300">
+            <div className="relative w-11 h-11 flex items-center justify-center p-1 rounded-xl bg-purple-100 dark:bg-purple-950/50 border border-purple-300/60 dark:border-purple-500/30 group-hover:border-purple-500 transition-all duration-300">
               <img 
                 src={agentblazerLogo} 
                 alt="AgentBlazer Club Logo" 
@@ -50,14 +51,14 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-display font-bold text-lg tracking-wide text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-cyan-300 transition-colors">
+                <span className="font-display font-bold text-base sm:text-lg tracking-wide text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-cyan-300 transition-colors">
                   AgentBlazer
                 </span>
-                <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30">
                   Club
                 </span>
               </div>
-              <p className="text-[11px] font-mono text-slate-600 dark:text-slate-400 hidden sm:block">
+              <p className="text-[10px] font-mono text-slate-600 dark:text-slate-400 hidden sm:block">
                 Dept of Computer Science & Engineering • SJEC
               </p>
             </div>
@@ -77,11 +78,21 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
             ))}
           </nav>
 
-          {/* Action Tools: Theme Palette, Light/Dark Switch, Notifications, Admin Switch */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* Action Tools: Replay Intro, Theme Palette, Light/Dark Switch, Notifications, Admin Switch */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
             
+            {/* Replay Falcon / Word Intro */}
+            <button
+              onClick={triggerReplayIntro}
+              title="Replay Soaring AgentBlazer Intro"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-950/40 hover:bg-purple-200 dark:hover:bg-purple-900/60 border border-purple-300 dark:border-purple-500/30 text-purple-700 dark:text-purple-300 text-xs font-mono transition-all group"
+            >
+              <Play className="w-3 h-3 text-cyan-500 fill-cyan-500 group-hover:scale-110 transition-transform" />
+              <span className="text-[11px]">Intro</span>
+            </button>
+
             {/* Curated Theme Accent Selector */}
-            <div className="hidden md:flex items-center gap-1.5 p-1 rounded-xl bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10" title="Curated Theme Palette">
+            <div className="hidden md:flex items-center gap-1.5 p-1 rounded-xl bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10" title="Curated Theme Accent">
               <button
                 onClick={() => setAccentColor('violet')}
                 title="Cyber Violet (AgentBlazer Signature)"
@@ -104,7 +115,7 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
               />
             </div>
 
-            {/* Simple Light / Dark Mode Toggle */}
+            {/* Light / Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
               title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
@@ -151,7 +162,7 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
                 id="nav-admin-btn"
                 onClick={onOpenAdminLogin}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-purple-700 dark:hover:text-cyan-300 text-xs font-mono transition-all"
-                title="Organizer Portal"
+                title="Admin Management Console"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                 <span className="hidden sm:inline">Admin Portal</span>
@@ -182,8 +193,16 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
               {link.label}
             </a>
           ))}
-          <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex justify-between items-center">
-            <span className="text-xs text-slate-500 font-mono">Mode: {theme.toUpperCase()}</span>
+          <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex justify-between items-center">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                triggerReplayIntro();
+              }}
+              className="text-xs font-mono text-purple-600 dark:text-purple-400 flex items-center gap-1"
+            >
+              <Play className="w-3 h-3" /> Replay Intro
+            </button>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -191,7 +210,7 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
               }}
               className="text-xs font-mono text-purple-600 dark:text-cyan-400 flex items-center gap-1"
             >
-              Organizer Access <ArrowRight className="w-3 h-3" />
+              Admin Access <ArrowRight className="w-3 h-3" />
             </button>
           </div>
         </div>

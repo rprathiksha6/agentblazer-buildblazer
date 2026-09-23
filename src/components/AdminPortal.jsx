@@ -1,36 +1,85 @@
 import React, { useState } from 'react';
 import { useClub } from '../context/ClubContext';
+import agentblazerLogo from '../assets/agentblazer-logo.png';
 import { 
-  ShieldCheck, MessageSquare, Trophy, Bell, Download, Search, CheckCircle2, 
-  Clock, AlertTriangle, ExternalLink, Send, ArrowLeft, Filter, Sparkles, UserCheck 
+  ShieldCheck, Lock, LogOut, ArrowLeft, Globe, MessageSquare, 
+  Users, Bell, Settings, Plus, Trash2, Edit3, CheckCircle2, 
+  Clock, AlertCircle, Sparkles, RefreshCw, Save, ChevronRight,
+  ExternalLink, Search, Filter, Shield, Eye
 } from 'lucide-react';
 
 export const AdminPortal = () => {
   const { 
-    doubts, replyDoubt, updateDoubtStatus,
-    submissions, updateSubmissionStatus,
+    adminAuth, loginAdmin, logoutAdmin,
+    siteContent, updateHeroContent, updateIntroContent,
+    updateActivity, addActivity, deleteActivity,
+    updateFaculty, updateStudentLead, addStudentLead, deleteStudentLead, resetToDefaultContent,
+    doubts, replyToDoubt, updateDoubtStatus,
+    memberships, updateMembershipStatus,
     notifications, addNotification,
-    setPortalView 
+    setPortalView
   } = useClub();
 
-  const [activeTab, setActiveTab] = useState('doubts'); // 'doubts' | 'submissions' | 'broadcast' | 'export'
-  
-  // Doubts filter & reply modal state
+  // Login Form Local State
+  const [loginForm, setLoginForm] = useState({ username: 'admin', password: '' });
+  const [loginError, setLoginError] = useState('');
+
+  // Admin Active Tab
+  const [activeTab, setActiveTab] = useState('cms'); // 'cms' | 'doubts' | 'members' | 'broadcast' | 'settings'
+
+  // CMS Sub-Tab
+  const [cmsSection, setCmsSection] = useState('hero'); // 'hero' | 'intro' | 'activities' | 'leadership'
+  const [cmsSaveSuccess, setCmsSaveSuccess] = useState(false);
+
+  // Hero CMS Form State
+  const [heroForm, setHeroForm] = useState(() => ({
+    badge: siteContent.hero?.badge || '',
+    titlePart1: siteContent.hero?.titlePart1 || '',
+    titleHighlight1: siteContent.hero?.titleHighlight1 || '',
+    titlePart2: siteContent.hero?.titlePart2 || '',
+    titleHighlight2: siteContent.hero?.titleHighlight2 || '',
+    departmentLine: siteContent.hero?.departmentLine || '',
+    description: siteContent.hero?.description || '',
+    stats: siteContent.hero?.stats ? [...siteContent.hero.stats] : []
+  }));
+
+  // Intro CMS Form State
+  const [introForm, setIntroForm] = useState(() => ({
+    pillBadge: siteContent.intro?.pillBadge || '',
+    heading: siteContent.intro?.heading || '',
+    subheading: siteContent.intro?.subheading || '',
+    overview: siteContent.intro?.overview || '',
+    inaugurationSummary: siteContent.intro?.inaugurationSummary || '',
+    mission: siteContent.intro?.mission || '',
+    vision: siteContent.intro?.vision || ''
+  }));
+
+  // Activity Add/Edit Modal State
+  const [editingActivity, setEditingActivity] = useState(null);
+  const [activityForm, setActivityForm] = useState({
+    title: '',
+    date: '',
+    venue: '',
+    category: '',
+    tag: '',
+    attendees: '',
+    summary: '',
+    highlights: ''
+  });
+  const [showAddActivityModal, setShowAddActivityModal] = useState(false);
+
+  // Doubts Filter State
   const [doubtSearch, setDoubtSearch] = useState('');
-  const [doubtFilter, setDoubtFilter] = useState('all'); // all, pending, answered
+  const [doubtFilter, setDoubtFilter] = useState('all');
   const [activeDoubtReply, setActiveDoubtReply] = useState(null);
   const [replyText, setReplyText] = useState('');
-  const [repliedBy, setRepliedBy] = useState('Stevin Dsouza (Tech Lead)');
+  const [repliedBy, setRepliedBy] = useState('Keith Fernandes (Faculty Lead)');
 
-  // Submissions filter & scoring state
-  const [subSearch, setSubSearch] = useState('');
-  const [subFilter, setSubFilter] = useState('all');
-  const [activeScoringSub, setActiveScoringSub] = useState(null);
-  const [scoreInput, setScoreInput] = useState('');
-  const [statusInput, setStatusInput] = useState('approved');
-  const [feedbackInput, setFeedbackInput] = useState('');
+  // Membership Filter State
+  const [memberSearch, setMemberSearch] = useState('');
+  const [memberFilter, setMemberFilter] = useState('all');
 
-  // New notification state
+  // Announcement Form State
   const [notifForm, setNotifForm] = useState({
     title: '',
     message: '',
@@ -39,49 +88,93 @@ export const AdminPortal = () => {
   });
   const [notifSuccess, setNotifSuccess] = useState(false);
 
-  // Filtered Doubts
-  const filteredDoubts = doubts.filter(d => {
-    const matchSearch = d.studentName.toLowerCase().includes(doubtSearch.toLowerCase()) ||
-                        d.usn.toLowerCase().includes(doubtSearch.toLowerCase()) ||
-                        d.query.toLowerCase().includes(doubtSearch.toLowerCase()) ||
-                        d.id.toLowerCase().includes(doubtSearch.toLowerCase());
-    if (doubtFilter === 'pending') return matchSearch && d.status === 'pending';
-    if (doubtFilter === 'answered') return matchSearch && d.status === 'answered';
-    return matchSearch;
-  });
+  // Handle Login
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setLoginError('');
+    const success = loginAdmin(loginForm.username, loginForm.password);
+    if (!success) {
+      setLoginError('Invalid credentials. (Hint: username is "admin" & password is "agentblazer2026")');
+    }
+  };
 
-  // Filtered Submissions
-  const filteredSubmissions = submissions.filter(s => {
-    const matchSearch = s.teamName.toLowerCase().includes(subSearch.toLowerCase()) ||
-                        s.teamLead.toLowerCase().includes(subSearch.toLowerCase()) ||
-                        s.leadUsn.toLowerCase().includes(subSearch.toLowerCase());
-    if (subFilter !== 'all') return matchSearch && s.status === subFilter;
-    return matchSearch;
-  });
+  const handleQuickDemoLogin = () => {
+    loginAdmin('admin', 'agentblazer2026');
+  };
 
-  // Handle Reply to Doubt
-  const handleSendReply = (e) => {
+  // Handle Hero Save
+  const handleSaveHero = (e) => {
+    e.preventDefault();
+    updateHeroContent(heroForm);
+    setCmsSaveSuccess(true);
+    setTimeout(() => setCmsSaveSuccess(false), 2500);
+  };
+
+  // Handle Intro Save
+  const handleSaveIntro = (e) => {
+    e.preventDefault();
+    updateIntroContent(introForm);
+    setCmsSaveSuccess(true);
+    setTimeout(() => setCmsSaveSuccess(false), 2500);
+  };
+
+  // Handle Activity Submit
+  const handleSaveActivity = (e) => {
+    e.preventDefault();
+    const highlightsArr = activityForm.highlights
+      ? activityForm.highlights.split(',').map(s => s.trim()).filter(Boolean)
+      : [];
+
+    if (editingActivity) {
+      updateActivity(editingActivity.id, {
+        ...activityForm,
+        highlights: highlightsArr
+      });
+      setEditingActivity(null);
+    } else {
+      addActivity({
+        ...activityForm,
+        highlights: highlightsArr,
+        type: 'upcoming'
+      });
+      setShowAddActivityModal(false);
+    }
+    setActivityForm({
+      title: '',
+      date: '',
+      venue: '',
+      category: '',
+      tag: '',
+      attendees: '',
+      summary: '',
+      highlights: ''
+    });
+  };
+
+  const handleStartEditActivity = (act) => {
+    setEditingActivity(act);
+    setActivityForm({
+      title: act.title || '',
+      date: act.date || '',
+      venue: act.venue || '',
+      category: act.category || '',
+      tag: act.tag || '',
+      attendees: act.attendees || '',
+      summary: act.summary || '',
+      highlights: act.highlights ? act.highlights.join(', ') : ''
+    });
+  };
+
+  // Handle Doubt Reply
+  const handleSendDoubtReply = (e) => {
     e.preventDefault();
     if (!replyText.trim() || !activeDoubtReply) return;
-    replyDoubt(activeDoubtReply.id, replyText.trim(), repliedBy);
+    replyToDoubt(activeDoubtReply.id, replyText.trim(), repliedBy);
     setActiveDoubtReply(null);
     setReplyText('');
   };
 
-  // Handle Update Submission Score & Status
-  const handleSaveScore = (e) => {
-    e.preventDefault();
-    if (!activeScoringSub) return;
-    updateSubmissionStatus(
-      activeScoringSub.id, 
-      statusInput, 
-      scoreInput ? Number(scoreInput) : activeScoringSub.score, 
-      feedbackInput
-    );
-    setActiveScoringSub(null);
-  };
-
-  // Handle Post Notification
+  // Handle Announcement Submit
   const handlePostNotification = (e) => {
     e.preventDefault();
     if (!notifForm.title || !notifForm.message) return;
@@ -93,613 +186,961 @@ export const AdminPortal = () => {
     });
     setNotifSuccess(true);
     setNotifForm({ title: '', message: '', urgency: 'high', audience: 'all' });
-    setTimeout(() => setNotifSuccess(false), 3000);
+    setTimeout(() => setNotifSuccess(false), 2500);
   };
 
-  // Export Data JSON
-  const handleExportData = (type) => {
-    let dataStr = "";
-    let filename = "";
-    if (type === 'submissions') {
-      dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(submissions, null, 2));
-      filename = "agentblazer_buildblazer_submissions.json";
-    } else {
-      dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(doubts, null, 2));
-      filename = "agentblazer_student_doubts.json";
-    }
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", filename);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-  };
+  // Filtered Doubts
+  const filteredDoubts = doubts.filter(d => {
+    const matchSearch = (d.studentName || '').toLowerCase().includes(doubtSearch.toLowerCase()) ||
+                        (d.query || '').toLowerCase().includes(doubtSearch.toLowerCase()) ||
+                        (d.subject || '').toLowerCase().includes(doubtSearch.toLowerCase()) ||
+                        (d.id || '').toLowerCase().includes(doubtSearch.toLowerCase());
+    if (doubtFilter === 'pending') return matchSearch && d.status === 'pending';
+    if (doubtFilter === 'answered') return matchSearch && d.status === 'answered';
+    return matchSearch;
+  });
 
+  // Filtered Memberships
+  const filteredMemberships = memberships.filter(m => {
+    const matchSearch = (m.name || '').toLowerCase().includes(memberSearch.toLowerCase()) ||
+                        (m.usn || '').toLowerCase().includes(memberSearch.toLowerCase()) ||
+                        (m.email || '').toLowerCase().includes(memberSearch.toLowerCase());
+    if (memberFilter !== 'all') return matchSearch && m.status === memberFilter;
+    return matchSearch;
+  });
+
+  // -------------------------------------------------------------
+  // 1. STANDALONE LOGIN SCREEN (If not authenticated)
+  // -------------------------------------------------------------
+  if (!adminAuth.isAuthenticated) {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center px-4 py-16 animate-fadeIn">
+        <div className="max-w-md w-full glass-panel p-8 sm:p-10 rounded-3xl border border-purple-500/40 shadow-2xl bg-white dark:bg-black/90 space-y-6">
+          
+          <div className="text-center space-y-3">
+            <div className="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-950/60 border border-purple-400 dark:border-purple-500/40 p-2 mx-auto flex items-center justify-center shadow-neon-violet">
+              <img src={agentblazerLogo} alt="Logo" className="w-full h-full object-contain" />
+            </div>
+
+            <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white">
+              Admin Portal
+            </h2>
+            <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+              Department of CSE • AgentBlazer Management Console
+            </p>
+          </div>
+
+          {loginError && (
+            <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 text-xs font-mono flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-500" />
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-4 text-xs font-mono">
+            <div>
+              <label className="block text-slate-700 dark:text-slate-300 mb-1.5 font-semibold">
+                Admin Username
+              </label>
+              <input
+                type="text"
+                required
+                value={loginForm.username}
+                onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
+                placeholder="admin"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:border-purple-500 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-slate-700 dark:text-slate-300 mb-1.5 font-semibold">
+                Admin Password
+              </label>
+              <input
+                type="password"
+                required
+                value={loginForm.password}
+                onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+                placeholder="Enter password (agentblazer2026)"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:border-purple-500 focus:outline-none tracking-wider"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold text-sm shadow-md transition-all active:scale-[0.99]"
+            >
+              Sign In to Console
+            </button>
+          </form>
+
+          <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex flex-col gap-2.5 text-center">
+            <button
+              type="button"
+              onClick={handleQuickDemoLogin}
+              className="w-full py-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 border border-cyan-300 dark:border-cyan-500/40 text-cyan-700 dark:text-cyan-300 text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1.5"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>One-Click Quick Admin Access (Demo)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPortalView('student')}
+              className="text-xs font-mono text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-300 flex items-center justify-center gap-1 mt-1 transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Return to Public Website</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  // -------------------------------------------------------------
+  // 2. AUTHENTICATED ADMIN DASHBOARD
+  // -------------------------------------------------------------
   return (
-    <div className="min-h-screen pt-8 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 animate-fadeIn">
+    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 animate-fadeIn">
       
-      {/* Top Admin Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 glass-panel rounded-3xl border border-purple-500/40">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-mono border border-purple-500/30">
-            <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-            <span>ORGANIZER COMMAND CONSOLE</span>
+      {/* Top Admin Navigation Header */}
+      <div className="glass-panel p-6 rounded-3xl border border-purple-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/90 dark:bg-black/80">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/60 border border-purple-400 dark:border-purple-500/40 p-1.5 flex items-center justify-center">
+            <img src={agentblazerLogo} alt="Logo" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
-            AgentBlazer <span className="text-cyan-400">Admin Portal</span>
-          </h1>
-          <p className="text-xs font-mono text-slate-400">
-            Authenticated Session • Faculty Advisory & Student Core Team
-          </p>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-display font-bold text-slate-900 dark:text-white">
+                AgentBlazer Admin Console
+              </h1>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30">
+                Live CMS Active
+              </span>
+            </div>
+            <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+              Logged in as <strong className="text-purple-600 dark:text-purple-400">{adminAuth.username || 'admin'}</strong> • Real-time website management
+            </p>
+          </div>
         </div>
 
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setPortalView('student')}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-200 text-xs font-mono transition-all"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>View Public Website</span>
+          </button>
+          
+          <button
+            onClick={logoutAdmin}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-300 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 text-xs font-mono transition-all"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Tab Controls */}
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-white/10 pb-4 overflow-x-auto">
         <button
-          onClick={() => setPortalView('student')}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-mono transition-all self-end sm:self-auto"
+          onClick={() => setActiveTab('cms')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
+            activeTab === 'cms'
+              ? 'bg-purple-600 text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
+          }`}
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Exit to Student View</span>
+          <Globe className="w-4 h-4" />
+          <span>Website Live CMS</span>
         </button>
-      </div>
 
-      {/* KPI Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        <div className="glass-panel p-5 rounded-2xl border border-white/10 space-y-1">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>Total Doubts</span>
-            <MessageSquare className="w-4 h-4 text-purple-400" />
-          </div>
-          <div className="text-3xl font-display font-bold text-white">
-            {doubts.length}
-          </div>
-          <div className="text-[11px] font-mono text-amber-400">
-            {doubts.filter(d => d.status === 'pending').length} Pending Replies
-          </div>
-        </div>
-
-        <div className="glass-panel p-5 rounded-2xl border border-white/10 space-y-1">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>Build Blazer Teams</span>
-            <Trophy className="w-4 h-4 text-cyan-400" />
-          </div>
-          <div className="text-3xl font-display font-bold text-white">
-            {submissions.length}
-          </div>
-          <div className="text-[11px] font-mono text-emerald-400">
-            {submissions.filter(s => s.status === 'approved').length} Approved Designs
-          </div>
-        </div>
-
-        <div className="glass-panel p-5 rounded-2xl border border-white/10 space-y-1">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>Broadcast Alerts</span>
-            <Bell className="w-4 h-4 text-pink-400" />
-          </div>
-          <div className="text-3xl font-display font-bold text-white">
-            {notifications.length}
-          </div>
-          <div className="text-[11px] font-mono text-cyan-400">
-            Live in Student Notification Center
-          </div>
-        </div>
-
-        <div className="glass-panel p-5 rounded-2xl border border-white/10 space-y-1">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>Lead Evaluator</span>
-            <UserCheck className="w-4 h-4 text-emerald-400" />
-          </div>
-          <div className="text-sm font-display font-bold text-white pt-1">
-            Mr. Keith Fernandes
-          </div>
-          <div className="text-[11px] font-mono text-slate-400">
-            Faculty Coordinator • CSE
-          </div>
-        </div>
-
-      </div>
-
-      {/* Admin Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-3 text-xs font-mono">
         <button
           onClick={() => setActiveTab('doubts')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all ${
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
             activeTab === 'doubts'
-              ? 'bg-purple-600/40 text-purple-200 border border-purple-500/50 shadow-neon-violet'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-purple-600 text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
           }`}
         >
-          <MessageSquare className="w-3.5 h-3.5" />
-          <span>Student Doubts Desk ({doubts.filter(d => d.status === 'pending').length} new)</span>
+          <MessageSquare className="w-4 h-4" />
+          <span>Student Doubts Ledger</span>
+          <span className="px-1.5 py-0.2 rounded-full bg-white/20 text-[10px]">
+            {doubts.filter(d => d.status === 'pending').length}
+          </span>
         </button>
 
         <button
-          onClick={() => setActiveTab('submissions')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all ${
-            activeTab === 'submissions'
-              ? 'bg-cyan-600/40 text-cyan-200 border border-cyan-500/50 shadow-neon-cyan'
-              : 'text-slate-400 hover:text-white'
+          onClick={() => setActiveTab('members')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
+            activeTab === 'members'
+              ? 'bg-purple-600 text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
           }`}
         >
-          <Trophy className="w-3.5 h-3.5" />
-          <span>Build Blazer Submissions ({submissions.length})</span>
+          <Users className="w-4 h-4" />
+          <span>Membership Applications</span>
+          <span className="px-1.5 py-0.2 rounded-full bg-white/20 text-[10px]">
+            {memberships.filter(m => m.status === 'pending').length}
+          </span>
         </button>
 
         <button
           onClick={() => setActiveTab('broadcast')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all ${
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
             activeTab === 'broadcast'
-              ? 'bg-pink-600/40 text-pink-200 border border-pink-500/50 shadow-sm'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-purple-600 text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
           }`}
         >
-          <Bell className="w-3.5 h-3.5" />
-          <span>Broadcast Alerts</span>
+          <Bell className="w-4 h-4" />
+          <span>Announcements</span>
         </button>
 
         <button
-          onClick={() => setActiveTab('export')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all ${
-            activeTab === 'export'
-              ? 'bg-emerald-600/40 text-emerald-200 border border-emerald-500/50 shadow-sm'
-              : 'text-slate-400 hover:text-white'
+          onClick={() => setActiveTab('settings')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-mono font-semibold transition-all ${
+            activeTab === 'settings'
+              ? 'bg-purple-600 text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
           }`}
         >
-          <Download className="w-3.5 h-3.5" />
-          <span>Export Ledger</span>
+          <Settings className="w-4 h-4" />
+          <span>System & Reset</span>
         </button>
       </div>
 
-      {/* 1. STUDENT DOUBTS TAB */}
+      {/* ----------------------------------------------------------- */}
+      {/* TAB 1: WEBSITE LIVE CMS */}
+      {/* ----------------------------------------------------------- */}
+      {activeTab === 'cms' && (
+        <div className="space-y-6">
+          
+          {/* CMS Sub-Tabs & Notification Feedback */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-2 bg-slate-200/80 dark:bg-black/60 p-1 rounded-2xl border border-slate-300 dark:border-white/10 text-xs font-mono">
+              <button
+                onClick={() => setCmsSection('hero')}
+                className={`px-4 py-2 rounded-xl transition-all ${
+                  cmsSection === 'hero' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400'
+                }`}
+              >
+                Hero Section
+              </button>
+              <button
+                onClick={() => setCmsSection('intro')}
+                className={`px-4 py-2 rounded-xl transition-all ${
+                  cmsSection === 'intro' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400'
+                }`}
+              >
+                About & Pillars
+              </button>
+              <button
+                onClick={() => setCmsSection('activities')}
+                className={`px-4 py-2 rounded-xl transition-all ${
+                  cmsSection === 'activities' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400'
+                }`}
+              >
+                Activities Manager
+              </button>
+            </div>
+
+            {cmsSaveSuccess && (
+              <div className="px-4 py-2 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-400 text-emerald-700 dark:text-emerald-300 text-xs font-mono flex items-center gap-2 animate-fadeIn">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <span>Changes published live to website!</span>
+              </div>
+            )}
+          </div>
+
+          {/* Sub-Tab 1: HERO SECTION CMS */}
+          {cmsSection === 'hero' && (
+            <form onSubmit={handleSaveHero} className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 space-y-5 bg-white/80 dark:bg-black/70">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
+                <div>
+                  <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white">
+                    Edit Front Hero Section
+                  </h3>
+                  <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                    Modify the banner, headings, description, and metric counters shown at the top of the site.
+                  </p>
+                </div>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Publish Live</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Top Pill Badge Text</label>
+                  <input
+                    type="text"
+                    value={heroForm.badge}
+                    onChange={(e) => setHeroForm({ ...heroForm, badge: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Department Sub-line</label>
+                  <input
+                    type="text"
+                    value={heroForm.departmentLine}
+                    onChange={(e) => setHeroForm({ ...heroForm, departmentLine: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Title Part 1 (Regular)</label>
+                  <input
+                    type="text"
+                    value={heroForm.titlePart1}
+                    onChange={(e) => setHeroForm({ ...heroForm, titlePart1: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Title Highlight 1 (Gradient)</label>
+                  <input
+                    type="text"
+                    value={heroForm.titleHighlight1}
+                    onChange={(e) => setHeroForm({ ...heroForm, titleHighlight1: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Title Part 2</label>
+                  <input
+                    type="text"
+                    value={heroForm.titlePart2}
+                    onChange={(e) => setHeroForm({ ...heroForm, titlePart2: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Title Highlight 2 (Gradient)</label>
+                  <input
+                    type="text"
+                    value={heroForm.titleHighlight2}
+                    onChange={(e) => setHeroForm({ ...heroForm, titleHighlight2: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                  Hero Main Paragraph Description
+                </label>
+                <textarea
+                  rows={3}
+                  value={heroForm.description}
+                  onChange={(e) => setHeroForm({ ...heroForm, description: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-sans focus:outline-none focus:border-purple-500 leading-relaxed"
+                />
+              </div>
+
+              {/* Stats Metrics Editor */}
+              <div className="pt-2 border-t border-slate-200 dark:border-white/10 space-y-3">
+                <h4 className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  Live Metric Cards (4 Highlights)
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {heroForm.stats?.map((st, idx) => (
+                    <div key={idx} className="p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 space-y-1.5">
+                      <label className="text-[10px] font-mono text-purple-600 dark:text-purple-400 font-bold block">
+                        Metric {idx + 1}
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Value (e.g. 7+)"
+                        value={st.value}
+                        onChange={(e) => {
+                          const updated = [...heroForm.stats];
+                          updated[idx] = { ...updated[idx], value: e.target.value };
+                          setHeroForm({ ...heroForm, stats: updated });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/60 border border-slate-300 dark:border-white/15 text-xs font-bold text-slate-900 dark:text-white"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Label"
+                        value={st.label}
+                        onChange={(e) => {
+                          const updated = [...heroForm.stats];
+                          updated[idx] = { ...updated[idx], label: e.target.value };
+                          setHeroForm({ ...heroForm, stats: updated });
+                        }}
+                        className="w-full px-2.5 py-1 rounded-lg bg-white dark:bg-black/60 border border-slate-300 dark:border-white/15 text-[11px] text-slate-700 dark:text-slate-300"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </form>
+          )}
+
+          {/* Sub-Tab 2: INTRO & PILLARS CMS */}
+          {cmsSection === 'intro' && (
+            <form onSubmit={handleSaveIntro} className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 space-y-5 bg-white/80 dark:bg-black/70">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
+                <div>
+                  <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white">
+                    Edit Club Intro, Mission & Vision
+                  </h3>
+                  <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                    Modify the text rendered directly after the Hero page.
+                  </p>
+                </div>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Publish Live</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Badge</label>
+                  <input
+                    type="text"
+                    value={introForm.pillBadge}
+                    onChange={(e) => setIntroForm({ ...introForm, pillBadge: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Subheading</label>
+                  <input
+                    type="text"
+                    value={introForm.subheading}
+                    onChange={(e) => setIntroForm({ ...introForm, subheading: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                  Club Overview Text
+                </label>
+                <textarea
+                  rows={3}
+                  value={introForm.overview}
+                  onChange={(e) => setIntroForm({ ...introForm, overview: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-sans leading-relaxed"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                    Mission Statement
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={introForm.mission}
+                    onChange={(e) => setIntroForm({ ...introForm, mission: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-sans leading-relaxed"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-slate-700 dark:text-slate-300 mb-1">
+                    Vision Statement
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={introForm.vision}
+                    onChange={(e) => setIntroForm({ ...introForm, vision: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-sans leading-relaxed"
+                  />
+                </div>
+              </div>
+            </form>
+          )}
+
+          {/* Sub-Tab 3: ACTIVITIES MANAGER CMS */}
+          {cmsSection === 'activities' && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-display font-bold text-slate-900 dark:text-white">
+                    Live Activities & Workshops ({siteContent.activities?.length || 0})
+                  </h3>
+                  <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                    Add new workshops or edit/delete existing events.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowAddActivityModal(true)}
+                  className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-md"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add New Event</span>
+                </button>
+              </div>
+
+              {/* Activity Cards List */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {siteContent.activities?.map((act) => (
+                  <div 
+                    key={act.id} 
+                    className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-3 bg-white/90 dark:bg-black/80"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between text-[11px] font-mono mb-2">
+                        <span className="text-purple-600 dark:text-purple-400 font-semibold">{act.date}</span>
+                        <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 uppercase text-[10px]">
+                          {act.type || 'past'}
+                        </span>
+                      </div>
+                      <h4 className="font-display font-bold text-slate-900 dark:text-white text-sm mb-1">
+                        {act.title}
+                      </h4>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 font-sans line-clamp-2">
+                        {act.summary}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+                      <button
+                        onClick={() => handleStartEditActivity(act)}
+                        className="text-xs font-mono text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Edit</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          if (window.confirm(`Delete activity "${act.title}"?`)) {
+                            deleteActivity(act.id);
+                          }
+                        }}
+                        className="text-xs font-mono text-rose-500 hover:underline flex items-center gap-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete</span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+        </div>
+      )}
+
+      {/* ----------------------------------------------------------- */}
+      {/* TAB 2: DOUBTS DESK LEDGER */}
+      {/* ----------------------------------------------------------- */}
       {activeTab === 'doubts' && (
         <div className="space-y-4">
-          
-          {/* Controls: Search & Status Filter */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="relative w-full sm:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="relative flex-1 max-w-md">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
               <input
                 type="text"
-                placeholder="Search by student, USN, doubt..."
+                placeholder="Search student doubt by text or ID..."
                 value={doubtSearch}
                 onChange={(e) => setDoubtSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-mono focus:border-purple-400 focus:outline-none"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-mono focus:outline-none"
               />
             </div>
 
-            <div className="flex items-center gap-2 self-start sm:self-auto text-xs font-mono">
+            <div className="flex items-center gap-2 text-xs font-mono">
               <button
                 onClick={() => setDoubtFilter('all')}
-                className={`px-3 py-1.5 rounded-lg ${doubtFilter === 'all' ? 'bg-white/15 text-white' : 'text-slate-400'}`}
+                className={`px-3 py-1.5 rounded-xl ${doubtFilter === 'all' ? 'bg-purple-600 text-white' : 'bg-white/5 text-slate-400'}`}
               >
                 All ({doubts.length})
               </button>
               <button
                 onClick={() => setDoubtFilter('pending')}
-                className={`px-3 py-1.5 rounded-lg ${doubtFilter === 'pending' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'text-slate-400'}`}
+                className={`px-3 py-1.5 rounded-xl ${doubtFilter === 'pending' ? 'bg-amber-600 text-white' : 'bg-white/5 text-slate-400'}`}
               >
-                Pending
+                Pending ({doubts.filter(d => d.status === 'pending').length})
               </button>
               <button
                 onClick={() => setDoubtFilter('answered')}
-                className={`px-3 py-1.5 rounded-lg ${doubtFilter === 'answered' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'text-slate-400'}`}
+                className={`px-3 py-1.5 rounded-xl ${doubtFilter === 'answered' ? 'bg-emerald-600 text-white' : 'bg-white/5 text-slate-400'}`}
               >
-                Answered
+                Answered ({doubts.filter(d => d.status === 'answered').length})
               </button>
             </div>
           </div>
 
-          {/* Doubts List */}
           <div className="space-y-3">
             {filteredDoubts.map((d) => (
-              <div
-                key={d.id}
-                className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-purple-500/40 transition-all space-y-3"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-2.5">
-                  <div className="flex items-center gap-2 font-mono text-xs">
-                    <span className="font-bold text-cyan-400">{d.id}</span>
-                    <span className="text-slate-400">•</span>
-                    <span className="text-white font-semibold">{d.studentName}</span>
-                    <span className="text-purple-300">({d.usn})</span>
-                    <span className="text-slate-400 hidden md:inline">• {d.dept}, {d.year}</span>
-                  </div>
-
+              <div key={d.id} className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 space-y-3 bg-white/90 dark:bg-black/70">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-mono ${
-                      d.status === 'answered' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
-                      d.status === 'pending' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' :
-                      'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    <span className="font-mono font-bold text-xs text-purple-600 dark:text-cyan-400">
+                      {d.id}
+                    </span>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase ${
+                      d.status === 'answered' ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-400/30' : 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-400/30 animate-pulse'
                     }`}>
                       {d.status}
                     </span>
-                    <span className="text-[11px] font-mono text-slate-500">{d.submittedAt}</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-white/5 text-slate-500">
+                      {d.category}
+                    </span>
                   </div>
+
+                  <span className="text-[10px] font-mono text-slate-400">
+                    {d.submittedAt}
+                  </span>
                 </div>
 
                 <div>
-                  <div className="text-xs font-mono text-cyan-300 font-medium">{d.category}: {d.subject}</div>
-                  <p className="text-xs text-slate-200 mt-1 font-sans leading-relaxed">
-                    "{d.query}"
+                  <h4 className="font-mono font-bold text-slate-900 dark:text-white text-xs mb-1">
+                    {d.subject || 'Student Query'}
+                  </h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
+                    {d.query}
                   </p>
-                  <div className="text-[11px] font-mono text-slate-400 mt-1">
-                    Student Email: <a href={`mailto:${d.email}`} className="text-cyan-400 underline">{d.email}</a>
-                  </div>
                 </div>
 
-                {/* Reply section or button */}
                 {d.adminReply ? (
-                  <div className="p-3 rounded-xl bg-cyan-950/20 border border-cyan-500/30 text-xs font-mono space-y-1">
-                    <div className="text-cyan-300 font-semibold flex items-center justify-between">
-                      <span>Replied by: {d.repliedBy}</span>
-                      <span className="text-slate-500">{d.repliedAt}</span>
+                  <div className="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-500/30 space-y-1">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-purple-700 dark:text-purple-300 font-bold">
+                      <span>Replied by: {d.repliedBy || 'Lead Coordinator'}</span>
+                      <span>{d.repliedAt}</span>
                     </div>
-                    <p className="text-slate-300 font-sans">{d.adminReply}</p>
-                    <button
-                      onClick={() => {
-                        setActiveDoubtReply(d);
-                        setReplyText(d.adminReply);
-                      }}
-                      className="text-[11px] text-cyan-400 hover:underline pt-1"
-                    >
-                      Update Reply
-                    </button>
+                    <p className="text-xs text-slate-700 dark:text-slate-300 font-sans">
+                      {d.adminReply}
+                    </p>
                   </div>
                 ) : (
-                  <div className="flex justify-end pt-1">
+                  <div className="pt-2 flex items-center justify-between">
                     <button
                       onClick={() => {
                         setActiveDoubtReply(d);
                         setReplyText('');
                       }}
-                      className="px-4 py-1.5 rounded-xl bg-purple-600/40 hover:bg-purple-600/60 border border-purple-500/50 text-white font-mono text-xs flex items-center gap-1.5"
+                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-mono text-xs font-semibold flex items-center gap-1.5 shadow-sm"
                     >
-                      <Send className="w-3 h-3" /> Answer Doubt
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      <span>Write Public Answer</span>
+                    </button>
+
+                    <button
+                      onClick={() => updateDoubtStatus(d.id, 'answered')}
+                      className="text-xs font-mono text-slate-500 hover:text-emerald-500"
+                    >
+                      Mark as Resolved
                     </button>
                   </div>
                 )}
               </div>
             ))}
           </div>
-
         </div>
       )}
 
-      {/* 2. BUILD BLAZER SUBMISSIONS TAB */}
-      {activeTab === 'submissions' && (
+      {/* ----------------------------------------------------------- */}
+      {/* TAB 3: MEMBERSHIP APPLICATIONS */}
+      {/* ----------------------------------------------------------- */}
+      {activeTab === 'members' && (
         <div className="space-y-4">
-          
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="relative w-full sm:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="relative flex-1 max-w-md">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
               <input
                 type="text"
-                placeholder="Search team or lead USN..."
-                value={subSearch}
-                onChange={(e) => setSubSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-mono focus:border-cyan-400 focus:outline-none"
+                placeholder="Search applicants by name, USN, or email..."
+                value={memberSearch}
+                onChange={(e) => setMemberSearch(e.target.value)}
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white text-xs font-mono focus:outline-none"
               />
             </div>
 
-            <div className="flex items-center gap-2 self-start sm:self-auto text-xs font-mono">
+            <div className="flex items-center gap-2 text-xs font-mono">
               <button
-                onClick={() => setSubFilter('all')}
-                className={`px-3 py-1.5 rounded-lg ${subFilter === 'all' ? 'bg-white/15 text-white' : 'text-slate-400'}`}
+                onClick={() => setMemberFilter('all')}
+                className={`px-3 py-1.5 rounded-xl ${memberFilter === 'all' ? 'bg-purple-600 text-white' : 'bg-white/5 text-slate-400'}`}
               >
-                All ({submissions.length})
+                All ({memberships.length})
               </button>
               <button
-                onClick={() => setSubFilter('approved')}
-                className={`px-3 py-1.5 rounded-lg ${subFilter === 'approved' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'text-slate-400'}`}
+                onClick={() => setMemberFilter('pending')}
+                className={`px-3 py-1.5 rounded-xl ${memberFilter === 'pending' ? 'bg-amber-600 text-white' : 'bg-white/5 text-slate-400'}`}
               >
-                Approved
+                Pending ({memberships.filter(m => m.status === 'pending').length})
               </button>
               <button
-                onClick={() => setSubFilter('under_review')}
-                className={`px-3 py-1.5 rounded-lg ${subFilter === 'under_review' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'text-slate-400'}`}
+                onClick={() => setMemberFilter('approved')}
+                className={`px-3 py-1.5 rounded-xl ${memberFilter === 'approved' ? 'bg-emerald-600 text-white' : 'bg-white/5 text-slate-400'}`}
               >
-                Under Review
-              </button>
-              <button
-                onClick={() => setSubFilter('needs_revision')}
-                className={`px-3 py-1.5 rounded-lg ${subFilter === 'needs_revision' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'text-slate-400'}`}
-              >
-                Needs Revision
+                Approved ({memberships.filter(m => m.status === 'approved').length})
               </button>
             </div>
           </div>
 
-          <div className="space-y-4">
-            {filteredSubmissions.map((sub) => (
-              <div
-                key={sub.id}
-                className="glass-panel p-6 rounded-2xl border border-white/10 hover:border-cyan-500/40 transition-all space-y-4"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-display font-bold text-white">{sub.teamName}</h3>
-                      <span className="text-xs font-mono text-slate-400">({sub.id})</span>
-                    </div>
-                    <p className="text-xs font-mono text-purple-300 mt-0.5">
-                      Team Lead: {sub.teamLead} • {sub.leadUsn} ({sub.leadEmail})
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    {sub.score !== null && (
-                      <div className="text-right">
-                        <span className="text-[10px] font-mono text-slate-400 block">Jury Score</span>
-                        <span className="text-base font-display font-extrabold text-cyan-300">{sub.score} / 100</span>
-                      </div>
-                    )}
-                    <span className={`px-2.5 py-1 rounded text-xs uppercase font-mono ${
-                      sub.status === 'approved' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
-                      sub.status === 'under_review' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
-                      'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+          <div className="space-y-3">
+            {filteredMemberships.map((m) => (
+              <div key={m.id} className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/90 dark:bg-black/70">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-display font-bold text-sm text-slate-900 dark:text-white">{m.name}</span>
+                    <span className="text-xs font-mono text-purple-600 dark:text-cyan-400 font-semibold">({m.usn})</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase ${
+                      m.status === 'approved' ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300' : 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300'
                     }`}>
-                      {sub.status.replace('_', ' ')}
+                      {m.status}
                     </span>
                   </div>
+                  <div className="text-xs font-mono text-slate-500">
+                    {m.dept} • {m.year} • {m.email}
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 italic pt-1">
+                    "{m.interests || m.motivation || 'Interested in Autonomous Agents & AI Systems'}"
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="space-y-1.5">
-                    <span className="text-slate-400 block">Team Members:</span>
-                    <ul className="list-disc list-inside text-slate-300 space-y-0.5">
-                      {sub.members.map((m, i) => (
-                        <li key={i}>{m}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="space-y-2">
-                    <span className="text-slate-400 block">Submission Links:</span>
-                    <div className="flex flex-col gap-1.5">
-                      <a 
-                        href={sub.githubRepoUrl} 
-                        target="_blank" 
-                        rel="noreferrer"
-                        className="text-purple-400 hover:underline flex items-center gap-1.5"
-                      >
-                        GitHub Fork Repository <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                      <a 
-                        href={sub.deployedUrl} 
-                        target="_blank" 
-                        rel="noreferrer"
-                        className="text-cyan-400 hover:underline flex items-center gap-1.5"
-                      >
-                        Live Deployed Site <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                      {sub.figmaUrl && (
-                        <a 
-                          href={sub.figmaUrl} 
-                          target="_blank" 
-                          rel="noreferrer"
-                          className="text-pink-400 hover:underline flex items-center gap-1.5"
-                        >
-                          Phase 1 Figma Design Reference <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Feedback Note & Grade Button */}
-                <div className="pt-3 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
-                  <div className="text-slate-400">
-                    <strong className="text-slate-300">Feedback:</strong> {sub.feedback || "No feedback recorded yet."}
-                  </div>
-                  <button
-                    onClick={() => {
-                      setActiveScoringSub(sub);
-                      setScoreInput(sub.score ? String(sub.score) : '90');
-                      setStatusInput(sub.status);
-                      setFeedbackInput(sub.feedback || '');
-                    }}
-                    className="px-4 py-1.5 rounded-xl bg-cyan-600/40 hover:bg-cyan-600/60 border border-cyan-500/50 text-cyan-200 self-end sm:self-auto"
+                <div className="flex items-center gap-2 font-mono text-xs">
+                  {m.status === 'pending' && (
+                    <button
+                      onClick={() => updateMembershipStatus(m.id, 'approved')}
+                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold flex items-center gap-1 shadow-sm"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Approve
+                    </button>
+                  )}
+                  <a
+                    href={`mailto:${m.email}?subject=AgentBlazer%20Club%20Induction`}
+                    className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-300"
                   >
-                    Grade & Update Status
-                  </button>
+                    Email Student
+                  </a>
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       )}
 
-      {/* 3. BROADCAST ALERTS TAB */}
+      {/* ----------------------------------------------------------- */}
+      {/* TAB 4: BROADCAST ANNOUNCEMENTS */}
+      {/* ----------------------------------------------------------- */}
       {activeTab === 'broadcast' && (
-        <div className="max-w-2xl mx-auto glass-panel p-6 sm:p-8 rounded-3xl border border-pink-500/30 space-y-6">
-          <div className="space-y-1">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-pink-400 font-bold">
-              REAL-TIME BROADCAST
-            </span>
-            <h3 className="text-xl font-display font-bold text-white">
-              Publish Student Notification
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 space-y-4 bg-white/90 dark:bg-black/70">
+            <h3 className="text-base font-display font-bold text-slate-900 dark:text-white">
+              Broadcast Real-time Announcement
             </h3>
-            <p className="text-xs font-mono text-slate-400">
-              Notices broadcast instantly to all students and light up the notification bell.
+            <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+              Posts an immediate notification banner that pops up on all visitor screens.
             </p>
-          </div>
 
-          {notifSuccess && (
-            <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>Broadcast alert dispatched to student portal!</span>
-            </div>
-          )}
-
-          <form onSubmit={handlePostNotification} className="space-y-4 text-xs font-mono">
-            <div>
-              <label className="block text-slate-300 mb-1">Notification Title *</label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. Build Blazer Phase 2 Code Freeze in 2 Hours!"
-                value={notifForm.title}
-                onChange={(e) => setNotifForm({ ...notifForm, title: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white focus:border-pink-400 focus:outline-none"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-slate-300 mb-1">Urgency Level</label>
-                <select
-                  value={notifForm.urgency}
-                  onChange={(e) => setNotifForm({ ...notifForm, urgency: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white focus:border-pink-400 focus:outline-none"
-                >
-                  <option value="high">High (Red Alert)</option>
-                  <option value="normal">Normal (Amber)</option>
-                  <option value="info">Informational (Cyan)</option>
-                </select>
+            {notifSuccess && (
+              <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-400 text-emerald-700 dark:text-emerald-300 text-xs font-mono flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <span>Announcement published to live notification feed!</span>
               </div>
+            )}
 
+            <form onSubmit={handlePostNotification} className="space-y-4 text-xs font-mono">
               <div>
-                <label className="block text-slate-300 mb-1">Target Audience</label>
-                <select
-                  value={notifForm.audience}
-                  onChange={(e) => setNotifForm({ ...notifForm, audience: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white focus:border-pink-400 focus:outline-none"
-                >
-                  <option value="all">All Students & Faculty</option>
-                  <option value="third_years">Third-Year Teams Only</option>
-                  <option value="leads">Team Leads Only</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-slate-300 mb-1">Notification Body *</label>
-              <textarea
-                required
-                rows={4}
-                placeholder="Write the broadcast message here..."
-                value={notifForm.message}
-                onChange={(e) => setNotifForm({ ...notifForm, message: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white focus:border-pink-400 focus:outline-none resize-none leading-relaxed"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold transition-all shadow-md flex items-center justify-center gap-2"
-            >
-              <Bell className="w-4 h-4" />
-              <span>Broadcast Alert to Students</span>
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* 4. EXPORT DATA TAB */}
-      {activeTab === 'export' && (
-        <div className="max-w-2xl mx-auto glass-panel p-8 rounded-3xl border border-emerald-500/30 space-y-6 text-center">
-          <div className="space-y-1">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-              DATA REPOSITORY
-            </span>
-            <h3 className="text-2xl font-display font-bold text-white">
-              Export Club Records
-            </h3>
-            <p className="text-xs font-mono text-slate-400">
-              Download submissions, student doubt logs, and evaluation metrics for accreditation and reporting.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-            <div className="p-6 rounded-2xl bg-black/40 border border-white/10 space-y-3">
-              <Trophy className="w-8 h-8 text-cyan-400 mx-auto" />
-              <h4 className="text-base font-display font-bold text-white">Build Blazer Submissions</h4>
-              <p className="text-xs text-slate-400 font-mono">
-                {submissions.length} teams with GitHub links, live deployments, and scores.
-              </p>
-              <button
-                onClick={() => handleExportData('submissions')}
-                className="w-full py-2 rounded-xl bg-cyan-600/30 hover:bg-cyan-600/50 border border-cyan-500/40 text-cyan-200 text-xs font-mono"
-              >
-                Download Submissions JSON
-              </button>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-black/40 border border-white/10 space-y-3">
-              <MessageSquare className="w-8 h-8 text-purple-400 mx-auto" />
-              <h4 className="text-base font-display font-bold text-white">Student Doubts Ledger</h4>
-              <p className="text-xs text-slate-400 font-mono">
-                {doubts.length} student inquiries, USNs, and coordinator responses.
-              </p>
-              <button
-                onClick={() => handleExportData('doubts')}
-                className="w-full py-2 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/40 text-purple-200 text-xs font-mono"
-              >
-                Download Doubts JSON
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Reply Modal */}
-      {activeDoubtReply && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative max-w-lg w-full glass-panel p-6 rounded-3xl border border-purple-500/50 bg-black/95 space-y-4">
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-bold">
-                REPLY TO STUDENT INQUIRY
-              </span>
-              <h3 className="text-lg font-display font-bold text-white mt-1">
-                {activeDoubtReply.studentName} ({activeDoubtReply.usn})
-              </h3>
-              <p className="text-xs text-slate-300 font-sans mt-1 p-2 rounded bg-white/5 border border-white/10">
-                "{activeDoubtReply.query}"
-              </p>
-            </div>
-
-            <form onSubmit={handleSendReply} className="space-y-3 text-xs font-mono">
-              <div>
-                <label className="block text-slate-300 mb-1">Responding Officer / Faculty</label>
-                <select
-                  value={repliedBy}
-                  onChange={(e) => setRepliedBy(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-400 focus:outline-none"
-                >
-                  <option>Stevin Dsouza (Tech Lead)</option>
-                  <option>Ruben Saldanha (President)</option>
-                  <option>Mr. Keith Fernandes (Faculty Coordinator)</option>
-                  <option>Ms. Nisha Roche (Faculty Coordinator)</option>
-                  <option>Frenny Saldanha (Resource Head)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-slate-300 mb-1">Official Response *</label>
-                <textarea
+                <label className="block text-slate-700 dark:text-slate-300 mb-1 font-semibold">
+                  Announcement Title *
+                </label>
+                <input
+                  type="text"
                   required
-                  rows={4}
-                  placeholder="Type clear resolution for the student..."
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-purple-400 focus:outline-none resize-none leading-relaxed"
+                  placeholder="e.g. Agentforce Dev Summit 2026 Registrations Open"
+                  value={notifForm.title}
+                  onChange={(e) => setNotifForm({ ...notifForm, title: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div>
+                <label className="block text-slate-700 dark:text-slate-300 mb-1 font-semibold">
+                  Notification Message *
+                </label>
+                <textarea
+                  rows={3}
+                  required
+                  placeholder="Details regarding venue, schedule, or prerequisites..."
+                  value={notifForm.message}
+                  onChange={(e) => setNotifForm({ ...notifForm, message: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1 font-semibold">Urgency Level</label>
+                  <select
+                    value={notifForm.urgency}
+                    onChange={(e) => setNotifForm({ ...notifForm, urgency: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  >
+                    <option value="high">High (Red Pulse)</option>
+                    <option value="normal">Normal (Purple)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1 font-semibold">Target Audience</label>
+                  <select
+                    value={notifForm.audience}
+                    onChange={(e) => setNotifForm({ ...notifForm, audience: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  >
+                    <option value="all">All Engineering Students</option>
+                    <option value="club">AgentBlazer Members Only</option>
+                  </select>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold transition-all shadow-md"
+              >
+                Broadcast Announcement
+              </button>
+            </form>
+          </div>
+
+          <div className="lg:col-span-5 glass-panel p-6 rounded-3xl border border-slate-200 dark:border-white/10 space-y-3 bg-white/90 dark:bg-black/70">
+            <h4 className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+              Active Broadcast Stream ({notifications.length})
+            </h4>
+            <div className="space-y-2.5 max-h-[400px] overflow-y-auto">
+              {notifications.map((n) => (
+                <div key={n.id} className="p-3.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 space-y-1">
+                  <div className="flex items-center justify-between text-[11px] font-mono">
+                    <span className="font-bold text-purple-600 dark:text-purple-400">{n.title}</span>
+                    <span className="text-slate-400">{n.date}</span>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-sans">
+                    {n.message}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ----------------------------------------------------------- */}
+      {/* TAB 5: SETTINGS & DATABASE RESET */}
+      {/* ----------------------------------------------------------- */}
+      {activeTab === 'settings' && (
+        <div className="max-w-2xl mx-auto glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 space-y-6 bg-white/90 dark:bg-black/70">
+          <div>
+            <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white">
+              System Settings & Data Recovery
+            </h3>
+            <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+              Manage database backups and reset site content to official defaults.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-500/40 text-xs font-mono text-amber-800 dark:text-amber-300 space-y-2">
+            <div className="flex items-center gap-2 font-bold">
+              <AlertCircle className="w-4 h-4" />
+              <span>Reset to Official Defaults</span>
+            </div>
+            <p>
+              If you ever make accidental edits or want to reload the official inaugurational charter and activities, you can reset the live CMS content with one click.
+            </p>
+            <button
+              onClick={() => {
+                if (window.confirm("Are you sure you want to reset all website content back to factory defaults?")) {
+                  resetToDefaultContent();
+                  alert("Website content successfully restored to defaults.");
+                }
+              }}
+              className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold transition-all shadow-sm"
+            >
+              Reset All Content to Factory Defaults
+            </button>
+          </div>
+
+          <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-500">
+            <span>AgentBlazer Platform v2.5 Enterprise</span>
+            <span>SJEC CSE Dept</span>
+          </div>
+        </div>
+      )}
+
+      {/* ----------------------------------------------------------- */}
+      {/* MODAL: REPLY TO STUDENT DOUBT */}
+      {/* ----------------------------------------------------------- */}
+      {activeDoubtReply && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div className="relative max-w-lg w-full glass-panel p-6 rounded-3xl border border-cyan-500/40 shadow-2xl bg-white dark:bg-black/95 space-y-4">
+            <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">
+              Answer Student Ticket: {activeDoubtReply.id}
+            </h3>
+            
+            <div className="p-3.5 rounded-xl bg-slate-100 dark:bg-white/5 text-xs font-mono text-slate-600 dark:text-slate-300">
+              <strong className="block text-slate-900 dark:text-white mb-1">{activeDoubtReply.subject}</strong>
+              <p className="font-sans">{activeDoubtReply.query}</p>
+            </div>
+
+            <form onSubmit={handleSendDoubtReply} className="space-y-4 text-xs font-mono">
+              <div>
+                <label className="block text-slate-700 dark:text-slate-300 mb-1">Answering Coordinator Signature</label>
+                <select
+                  value={repliedBy}
+                  onChange={(e) => setRepliedBy(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                >
+                  <option>Keith Fernandes (Faculty Lead)</option>
+                  <option>Nisha Roche (Faculty Lead)</option>
+                  <option>Ruben Saldanha (President)</option>
+                  <option>Stevin Dsouza (Tech Lead)</option>
+                  <option>Ajay Preenal Dsouza (Vice President)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-slate-700 dark:text-slate-300 mb-1">Official Response *</label>
+                <textarea
+                  rows={4}
+                  required
+                  placeholder="Type clear resolution or guidance here..."
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-400 font-sans"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setActiveDoubtReply(null)}
-                  className="px-4 py-2 rounded-xl text-slate-400 hover:text-white"
+                  className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-slate-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-bold shadow-neon-violet"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-bold"
                 >
-                  Publish Response
+                  Send & Publish Answer
                 </button>
               </div>
             </form>
@@ -707,73 +1148,116 @@ export const AdminPortal = () => {
         </div>
       )}
 
-      {/* Scoring Modal */}
-      {activeScoringSub && (
+      {/* ----------------------------------------------------------- */}
+      {/* MODAL: ADD / EDIT ACTIVITY */}
+      {/* ----------------------------------------------------------- */}
+      {(showAddActivityModal || editingActivity) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative max-w-lg w-full glass-panel p-6 rounded-3xl border border-cyan-500/50 bg-black/95 space-y-4">
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-bold">
-                JURY EVALUATION & SCORING
-              </span>
-              <h3 className="text-xl font-display font-bold text-white mt-1">
-                Team {activeScoringSub.teamName}
-              </h3>
-              <p className="text-xs font-mono text-purple-300">
-                Lead: {activeScoringSub.teamLead} • {activeScoringSub.leadUsn}
-              </p>
-            </div>
+          <div className="relative max-w-xl w-full glass-panel p-6 sm:p-7 rounded-3xl border border-cyan-500/40 shadow-2xl bg-white dark:bg-black/95 space-y-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">
+              {editingActivity ? `Edit Activity: ${editingActivity.title}` : "Add New Event / Workshop"}
+            </h3>
 
-            <form onSubmit={handleSaveScore} className="space-y-3.5 text-xs font-mono">
+            <form onSubmit={handleSaveActivity} className="space-y-4 text-xs font-mono">
+              <div>
+                <label className="block text-slate-700 dark:text-slate-300 mb-1">Event Title *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Autonomous Agents Bootcamp 2026"
+                  value={activityForm.title}
+                  onChange={(e) => setActivityForm({ ...activityForm, title: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                />
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 mb-1">Score (out of 100)</label>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Date</label>
                   <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={scoreInput}
-                    onChange={(e) => setScoreInput(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-cyan-400 focus:outline-none"
+                    type="text"
+                    placeholder="e.g. October 15, 2026"
+                    value={activityForm.date}
+                    onChange={(e) => setActivityForm({ ...activityForm, date: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 mb-1">Review Status</label>
-                  <select
-                    value={statusInput}
-                    onChange={(e) => setStatusInput(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-cyan-400 focus:outline-none"
-                  >
-                    <option value="approved">Approved</option>
-                    <option value="under_review">Under Review</option>
-                    <option value="needs_revision">Needs Revision</option>
-                  </select>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Venue</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Advanced Computing Lab, SJEC"
+                    value={activityForm.venue}
+                    onChange={(e) => setActivityForm({ ...activityForm, venue: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Category</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Hands-on Workshop"
+                    value={activityForm.category}
+                    onChange={(e) => setActivityForm({ ...activityForm, category: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 mb-1">Badge Tag</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Flagship Bootcamp"
+                    value={activityForm.tag}
+                    onChange={(e) => setActivityForm({ ...activityForm, tag: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                  />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Evaluator Feedback Notes</label>
+                <label className="block text-slate-700 dark:text-slate-300 mb-1">Summary Description *</label>
                 <textarea
                   rows={3}
-                  value={feedbackInput}
-                  onChange={(e) => setFeedbackInput(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:border-cyan-400 focus:outline-none resize-none"
+                  required
+                  placeholder="Summary of the event..."
+                  value={activityForm.summary}
+                  onChange={(e) => setActivityForm({ ...activityForm, summary: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white font-sans"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div>
+                <label className="block text-slate-700 dark:text-slate-300 mb-1">Key Highlights (Comma Separated)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. LangChain, Multi-Agent, Vector Search, Live Deployment"
+                  value={activityForm.highlights}
+                  onChange={(e) => setActivityForm({ ...activityForm, highlights: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setActiveScoringSub(null)}
-                  className="px-4 py-2 rounded-xl text-slate-400 hover:text-white"
+                  onClick={() => {
+                    setShowAddActivityModal(false);
+                    setEditingActivity(null);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-slate-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold shadow-neon-cyan"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-bold shadow-md"
                 >
-                  Save Evaluation
+                  {editingActivity ? "Save Changes" : "Create Event"}
                 </button>
               </div>
             </form>

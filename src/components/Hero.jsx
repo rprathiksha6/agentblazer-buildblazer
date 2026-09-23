@@ -1,28 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { CLUB_META } from '../data/clubData';
+import React from 'react';
+import { useClub } from '../context/ClubContext';
 import agentblazerLogo from '../assets/agentblazer-logo.png';
-import { Sparkles, ArrowRight, Code2, Bot, Clock, CheckCircle2 } from 'lucide-react';
+import { Sparkles, ArrowRight, Bot, Calendar, UserPlus, HelpCircle } from 'lucide-react';
 
 export const Hero = () => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 4,
-    hours: 18,
-    minutes: 42,
-    seconds: 15
-  });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
-        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
-        return prev;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const { siteContent } = useClub();
+  const hero = siteContent.hero;
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -44,64 +27,80 @@ export const Hero = () => {
             {/* Top Collegiate Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-300 dark:border-cyan-500/40 text-cyan-700 dark:text-cyan-300 text-xs font-mono backdrop-blur-md shadow-sm">
               <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
-              <span>Collegiate AI Initiative • St Joseph Engineering College</span>
+              <span>{hero.badge || "Collegiate AI Initiative • St Joseph Engineering College"}</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
-              Pioneering <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-500 dark:from-purple-400 dark:via-pink-400 dark:to-cyan-400">Autonomous</span> & <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-500 to-indigo-600 dark:from-cyan-400 dark:via-sky-300 dark:to-indigo-400">Agentic AI Systems</span>
+              {hero.titlePart1 || "Pioneering"}{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-500 dark:from-purple-400 dark:via-pink-400 dark:to-cyan-400">
+                {hero.titleHighlight1 || "Autonomous"}
+              </span>{" "}
+              {hero.titlePart2 || "&"}{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-500 to-indigo-600 dark:from-cyan-400 dark:via-sky-300 dark:to-indigo-400">
+                {hero.titleHighlight2 || "Agentic AI Systems"}
+              </span>
             </h1>
 
             {/* Department Tagline */}
             <p className="text-sm sm:text-base font-mono text-purple-700 dark:text-purple-300/90 font-semibold">
-              Department of Computer Science & Engineering • St Joseph Engineering College, Mangaluru
+              {hero.departmentLine || "Department of Computer Science & Engineering • St Joseph Engineering College, Mangaluru"}
             </p>
 
             {/* Mission Paragraph */}
             <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-sans">
-              {CLUB_META.description}
+              {hero.description}
             </p>
 
             {/* CTA Button Group */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
-                onClick={() => scrollTo('activities-section')}
+                onClick={() => scrollTo('about-club')}
                 className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-medium text-sm transition-all shadow-lg hover:shadow-neon-cyan active:scale-95"
               >
-                <span>Explore Workshops & Events</span>
+                <span>About Club & Pillars</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
               <button
-                onClick={() => scrollTo('buildblazer-section')}
+                onClick={() => scrollTo('activities-section')}
                 className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-300 dark:border-white/15 text-slate-800 dark:text-slate-200 text-sm font-mono transition-all"
               >
-                <Code2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-                <span>Build Blazer Phase 2</span>
+                <Calendar className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                <span>Workshops & Events</span>
+              </button>
+
+              <button
+                onClick={() => scrollTo('join-connect-section')}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-950/40 dark:hover:bg-cyan-900/50 border border-cyan-200 dark:border-cyan-500/30 text-cyan-800 dark:text-cyan-300 text-sm font-mono transition-all"
+              >
+                <UserPlus className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                <span>Join Club</span>
               </button>
 
               <button
                 onClick={() => scrollTo('ask-doubt-section')}
                 className="flex items-center gap-2 px-4 py-3 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-500/30 text-purple-700 dark:text-purple-300 text-sm font-mono transition-all"
               >
-                <Bot className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                <span>Ask Doubt Desk</span>
+                <HelpCircle className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                <span>Ask Doubt</span>
               </button>
             </div>
 
-            {/* Live Phase 2 Build Blazer Notice */}
+            {/* Live Club Notice Card */}
             <div className="p-3.5 rounded-xl bg-slate-100/90 dark:bg-black/40 border border-purple-300/60 dark:border-purple-500/30 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-purple-600 dark:text-cyan-400 animate-spin" />
-                <span className="text-slate-800 dark:text-slate-300 font-semibold">Phase 2 Sprint Deadline:</span>
-                <span className="text-slate-500 dark:text-slate-400">Fork & Deploy</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="text-slate-800 dark:text-slate-300 font-semibold">Active Intake:</span>
+                <span className="text-slate-500 dark:text-slate-400">Academic Year 2025–2026 Student Membership Open</span>
               </div>
-              <div className="flex items-center gap-2 font-bold text-purple-700 dark:text-cyan-300">
-                <span className="px-2 py-1 bg-white dark:bg-white/5 rounded border border-slate-300 dark:border-white/10">{timeLeft.days}d</span>:
-                <span className="px-2 py-1 bg-white dark:bg-white/5 rounded border border-slate-300 dark:border-white/10">{timeLeft.hours}h</span>:
-                <span className="px-2 py-1 bg-white dark:bg-white/5 rounded border border-slate-300 dark:border-white/10">{timeLeft.minutes}m</span>:
-                <span className="px-2 py-1 bg-white dark:bg-white/5 rounded border border-slate-300 dark:border-white/10">{timeLeft.seconds}s</span>
-              </div>
+              <button
+                onClick={() => scrollTo('join-connect-section')}
+                className="text-purple-700 dark:text-cyan-300 font-bold hover:underline flex items-center gap-1"
+              >
+                <span>Apply Now</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
             </div>
 
           </div>
@@ -139,7 +138,7 @@ export const Hero = () => {
               {/* Floating Orbiting Chip: Autonomous Agents */}
               <div className="absolute -bottom-3 left-0 px-2.5 py-1 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-purple-400/50 dark:border-purple-500/50 backdrop-blur-md shadow-lg flex items-center gap-1.5 text-[11px] font-mono text-purple-700 dark:text-purple-300 animate-float" style={{ animationDelay: '3s' }}>
                 <Bot className="w-3 h-3 text-purple-500 dark:text-purple-400" />
-                <span>Agentforce & LangGraph</span>
+                <span>Agentforce & AI Labs</span>
               </div>
 
             </div>
@@ -150,40 +149,22 @@ export const Hero = () => {
 
         {/* Bottom Glass Stat Cards Bar */}
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          
-          <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-purple-500/40 transition-all group">
-            <div className="text-2xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 dark:from-purple-400 dark:to-pink-300">
-              8+
+          {hero.stats?.map((stat, idx) => (
+            <div 
+              key={idx} 
+              className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-purple-500/40 transition-all group"
+            >
+              <div className="text-2xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-600 dark:from-purple-400 dark:via-pink-300 dark:to-cyan-400">
+                {stat.value}
+              </div>
+              <div className="text-sm font-semibold text-slate-800 dark:text-white mt-1">
+                {stat.label}
+              </div>
+              <div className="text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">
+                {stat.detail}
+              </div>
             </div>
-            <div className="text-sm font-semibold text-slate-800 dark:text-white mt-1">Workshops & Challenges</div>
-            <div className="text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">Hands-on labs & coding sprints</div>
-          </div>
-
-          <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-cyan-500/40 transition-all group">
-            <div className="text-2xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-500 dark:from-cyan-400 dark:to-blue-300">
-              500+
-            </div>
-            <div className="text-sm font-semibold text-slate-800 dark:text-white mt-1">Students Reached</div>
-            <div className="text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">Across engineering departments</div>
-          </div>
-
-          <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-amber-500/40 transition-all group">
-            <div className="text-lg font-display font-bold text-slate-900 dark:text-white mt-1 flex items-center gap-2">
-              <span>Salesforce</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30">Partner</span>
-            </div>
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-300 mt-1">Community Synergy</div>
-            <div className="text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">Active Trailblazer Mentorship</div>
-          </div>
-
-          <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-emerald-500/40 transition-all group">
-            <div className="text-2xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-cyan-300">
-              35+
-            </div>
-            <div className="text-sm font-semibold text-slate-800 dark:text-white mt-1">Autonomous Prototypes</div>
-            <div className="text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">Built by student teams at SJEC</div>
-          </div>
-
+          ))}
         </div>
 
       </div>
