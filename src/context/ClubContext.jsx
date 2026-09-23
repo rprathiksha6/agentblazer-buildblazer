@@ -72,10 +72,21 @@ export const ClubProvider = ({ children }) => {
     return localStorage.getItem('agentblazer_accent_color') || 'violet';
   });
 
-  // Portal view: 'student' | 'admin'
-  const [portalView, setPortalViewState] = useState(() => {
+  // Helper to determine initial portal view from URL
+  const getInitialPortalView = () => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (path === '/admin' || path.startsWith('/admin/') || hash === '#admin' || search.includes('portal=admin')) {
+        return 'admin';
+      }
+    }
     return localStorage.getItem('agentblazer_portal_view') || 'student';
-  });
+  };
+
+  // Portal view: 'student' | 'admin' (Supports direct /admin and /#admin links!)
+  const [portalView, setPortalViewState] = useState(getInitialPortalView);
 
   // Admin Authentication State
   const [adminAuth, setAdminAuth] = useState(() => {
@@ -180,8 +191,41 @@ export const ClubProvider = ({ children }) => {
     setThemeState(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
+  // Sync browser URL whenever portalView changes or on popstate/hashchange
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (path === '/admin' || path.startsWith('/admin/') || hash === '#admin' || search.includes('portal=admin')) {
+        setPortalViewState('admin');
+      } else {
+        setPortalViewState('student');
+      }
+    };
+
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
+  }, []);
+
   const setPortalView = (view) => {
     setPortalViewState(view);
+    localStorage.setItem('agentblazer_portal_view', view);
+    if (typeof window !== 'undefined') {
+      if (view === 'admin') {
+        if (window.location.pathname !== '/admin') {
+          window.history.pushState({ portal: 'admin' }, '', '/admin');
+        }
+      } else {
+        if (window.location.pathname === '/admin') {
+          window.history.pushState({ portal: 'student' }, '', '/');
+        }
+      }
+    }
   };
 
   // Admin Auth functions

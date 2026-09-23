@@ -148,25 +148,33 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
               )}
             </button>
 
-            {/* Portal Switcher Button (Student vs Admin) */}
+            {/* Portal Switcher Link (Student vs Admin) */}
             {portalView === 'admin' ? (
-              <button
-                onClick={() => setPortalView('student')}
+              <a
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPortalView('student');
+                }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-900/40 border border-purple-400 dark:border-purple-500/40 text-purple-700 dark:text-purple-200 text-xs font-mono hover:bg-purple-200 dark:hover:bg-purple-800/40 transition-all shadow-sm"
               >
                 <Terminal className="w-3.5 h-3.5 text-purple-600 dark:text-cyan-400" />
                 <span>Student View</span>
-              </button>
+              </a>
             ) : (
-              <button
+              <a
                 id="nav-admin-btn"
-                onClick={onOpenAdminLogin}
+                href="/admin"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPortalView('admin');
+                }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-purple-700 dark:hover:text-cyan-300 text-xs font-mono transition-all"
-                title="Admin Management Console"
+                title="Admin Management Console (/admin)"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                 <span className="hidden sm:inline">Admin Portal</span>
-              </button>
+              </a>
             )}
 
             {/* Mobile Menu Toggle */}
@@ -203,15 +211,17 @@ export const Navbar = ({ onOpenNotifs, onOpenAdminLogin }) => {
             >
               <Play className="w-3 h-3" /> Replay Intro
             </button>
-            <button
-              onClick={() => {
+            <a
+              href="/admin"
+              onClick={(e) => {
+                e.preventDefault();
                 setMobileMenuOpen(false);
-                onOpenAdminLogin();
+                setPortalView('admin');
               }}
               className="text-xs font-mono text-purple-600 dark:text-cyan-400 flex items-center gap-1"
             >
-              Admin Access <ArrowRight className="w-3 h-3" />
-            </button>
+              Admin Portal (/admin) <ArrowRight className="w-3 h-3" />
+            </a>
           </div>
         </div>
       )}

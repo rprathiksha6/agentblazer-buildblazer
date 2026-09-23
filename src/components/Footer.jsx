@@ -102,13 +102,17 @@ export const Footer = ({ onOpenAdminLogin }) => {
               Inaugurated under the Department of Computer Science & Engineering, St Joseph Engineering College.
             </p>
             <div className="pt-2">
-              <button
-                onClick={onOpenAdminLogin}
+              <a
+                href="/admin"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onOpenAdminLogin();
+                }}
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 hover:text-cyan-300 transition-all text-xs"
               >
                 <Shield className="w-3.5 h-3.5 text-purple-400" />
-                <span>Admin Console Login</span>
-              </button>
+                <span>Admin Console (/admin)</span>
+              </a>
             </div>
           </div>
 

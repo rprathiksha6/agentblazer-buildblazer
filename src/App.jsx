@@ -21,7 +21,7 @@ const MainLayout = () => {
     <div className="min-h-screen cyber-grid-bg text-slate-900 dark:text-slate-100 flex flex-col selection:bg-purple-500 selection:text-white relative transition-colors duration-300">
       
       {/* Cinematic Word-by-Word Intro Splash with Soaring Falcon */}
-      {showIntro && <IntroSplash />}
+      {portalView !== 'admin' && showIntro && <IntroSplash />}
 
       {/* Top Navbar */}
       <Navbar 
