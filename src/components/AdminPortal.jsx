@@ -4,7 +4,7 @@ import agentblazerLogo from '../assets/agentblazer-logo.png';
 import { 
   ShieldCheck, Lock, LogOut, ArrowLeft, Globe, MessageSquare, 
   Users, Bell, Settings, Plus, Trash2, Edit3, CheckCircle2, 
-  AlertCircle, Sparkles, Save, ExternalLink, Search
+  AlertCircle, Sparkles, Save, ExternalLink, Search, Mail, BookOpen
 } from 'lucide-react';
 
 export const AdminPortal = () => {
@@ -13,7 +13,7 @@ export const AdminPortal = () => {
     siteContent, updateHeroContent, updateIntroContent,
     updateActivity, addActivity, deleteActivity,
     resetToDefaultContent,
-    doubts, replyToDoubt, updateDoubtStatus,
+    doubts, replyToDoubt, toggleDoubtFeatured, updateDoubtStatus,
     memberships, updateMembershipStatus,
     notifications, addNotification,
     setPortalView
@@ -74,6 +74,7 @@ export const AdminPortal = () => {
   const [activeDoubtReply, setActiveDoubtReply] = useState(null);
   const [replyText, setReplyText] = useState('');
   const [repliedBy, setRepliedBy] = useState('Keith Fernandes (Faculty Lead)');
+  const [isFeaturedFAQ, setIsFeaturedFAQ] = useState(false);
 
   // Membership Filter State
   const [memberSearch, setMemberSearch] = useState('');
@@ -169,9 +170,10 @@ export const AdminPortal = () => {
   const handleSendDoubtReply = (e) => {
     e.preventDefault();
     if (!replyText.trim() || !activeDoubtReply) return;
-    replyToDoubt(activeDoubtReply.id, replyText.trim(), repliedBy);
+    replyToDoubt(activeDoubtReply.id, replyText.trim(), repliedBy, isFeaturedFAQ);
     setActiveDoubtReply(null);
     setReplyText('');
+    setIsFeaturedFAQ(false);
   };
 
   // Handle Announcement Submit
@@ -228,25 +230,6 @@ export const AdminPortal = () => {
             <p className="text-xs font-mono text-purple-300">
               Department of CSE • Management Console
             </p>
-
-            {/* Direct Link Info Badge */}
-            <div className="flex items-center justify-between p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/30 text-[11px] font-mono text-purple-300">
-              <div className="flex items-center gap-1.5 truncate">
-                <ExternalLink className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
-                <span>Direct Link: <strong className="text-white">/admin</strong></span>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  navigator.clipboard.writeText(`${window.location.origin}/admin`);
-                  setCopiedLink(true);
-                  setTimeout(() => setCopiedLink(false), 2000);
-                }}
-                className="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold transition-all shadow-sm flex-shrink-0"
-              >
-                {copiedLink ? "Copied!" : "Copy Link"}
-              </button>
-            </div>
           </div>
 
           {loginError && (
@@ -296,17 +279,8 @@ export const AdminPortal = () => {
           <div className="pt-4 border-t border-white/10 flex flex-col gap-2.5 text-center">
             <button
               type="button"
-              onClick={handleQuickDemoLogin}
-              className="w-full py-2.5 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-purple-500/40 text-purple-200 text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1.5"
-            >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>One-Click Quick Admin Access (Demo)</span>
-            </button>
-
-            <button
-              type="button"
               onClick={() => setPortalView('student')}
-              className="text-xs font-mono text-slate-400 hover:text-purple-300 flex items-center justify-center gap-1 mt-1 transition-colors"
+              className="text-xs font-mono text-slate-400 hover:text-purple-300 flex items-center justify-center gap-1 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Return to Public Website</span>
@@ -346,20 +320,6 @@ export const AdminPortal = () => {
         </div>
 
         <div className="flex items-center gap-2.5 flex-wrap">
-          <button
-            type="button"
-            onClick={() => {
-              navigator.clipboard.writeText(`${window.location.origin}/admin`);
-              setCopiedLink(true);
-              setTimeout(() => setCopiedLink(false), 2000);
-            }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-purple-500/40 text-purple-300 text-xs font-mono transition-all"
-            title="Direct URL: /admin"
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            <span>{copiedLink ? "Copied /admin!" : "Copy Admin Link"}</span>
-          </button>
-
           <button
             onClick={() => setPortalView('student')}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 text-xs font-mono transition-all"
@@ -824,7 +784,7 @@ export const AdminPortal = () => {
             {filteredDoubts.map((d) => (
               <div key={d.id} className="glass-panel p-5 rounded-2xl border border-purple-500/30 space-y-3 bg-[#0a0d16]">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-mono font-bold text-xs text-purple-300">
                       {d.id}
                     </span>
@@ -834,6 +794,15 @@ export const AdminPortal = () => {
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/60 text-slate-400">
                       {d.category}
                     </span>
+                    {d.isFeaturedFAQ ? (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-cyan-950/60 text-cyan-300 border border-cyan-500/40 font-semibold flex items-center gap-1">
+                        <BookOpen className="w-2.5 h-2.5" /> Public FAQ
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-900 text-slate-400 border border-white/10 flex items-center gap-1">
+                        <Mail className="w-2.5 h-2.5 text-purple-400" /> Private (Gmail)
+                      </span>
+                    )}
                   </div>
 
                   <span className="text-[10px] font-mono text-slate-400">
@@ -842,6 +811,19 @@ export const AdminPortal = () => {
                 </div>
 
                 <div>
+                  <div className="flex items-center gap-2 text-xs font-mono text-slate-400 mb-1">
+                    <span className="text-white font-semibold">{d.studentName || 'Student'}</span>
+                    {d.usn && <span>({d.usn})</span>}
+                    <span>•</span>
+                    <a 
+                      href={`mailto:${d.email}`} 
+                      className="text-cyan-400 hover:underline flex items-center gap-1"
+                      title="Send email directly"
+                    >
+                      <Mail className="w-3 h-3" />
+                      <span>{d.email || 'No email registered'}</span>
+                    </a>
+                  </div>
                   <h4 className="font-mono font-bold text-white text-xs mb-1">
                     {d.subject || 'Student Query'}
                   </h4>
@@ -851,7 +833,7 @@ export const AdminPortal = () => {
                 </div>
 
                 {d.adminReply ? (
-                  <div className="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 space-y-1">
+                  <div className="p-3.5 rounded-xl bg-purple-950/40 border border-purple-500/30 space-y-2">
                     <div className="flex items-center justify-between text-[10px] font-mono text-purple-300 font-bold">
                       <span>Replied by: {d.repliedBy || 'Lead Coordinator'}</span>
                       <span>{d.repliedAt}</span>
@@ -859,19 +841,50 @@ export const AdminPortal = () => {
                     <p className="text-xs text-slate-200 font-sans">
                       {d.adminReply}
                     </p>
+                    <div className="pt-2 border-t border-purple-500/20 flex flex-wrap items-center justify-between gap-2">
+                      <button
+                        onClick={() => toggleDoubtFeatured(d.id)}
+                        className="text-[11px] font-mono text-purple-300 hover:text-white flex items-center gap-1 transition-colors"
+                      >
+                        <BookOpen className="w-3 h-3 text-cyan-400" />
+                        <span>{d.isFeaturedFAQ ? "Remove from Public FAQ" : "Promote to Public FAQ"}</span>
+                      </button>
+
+                      {d.email && (
+                        <a
+                          href={`mailto:${d.email}?subject=${encodeURIComponent(`[AgentBlazer Club] Answer to Doubt #${d.id}: ${d.subject || 'Inquiry'}`)}&body=${encodeURIComponent(`Dear Student,\n\nHere is the official resolution to your inquiry:\n"${d.query}"\n\n-----------------------------\nCoordinator Resolution:\n${d.adminReply}\n-----------------------------\n\nBest regards,\nAgentBlazer Club Leadership\nDept. of Computer Science & Engineering\nSt Joseph Engineering College`)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs flex items-center gap-1.5 transition-all shadow-sm"
+                        >
+                          <Mail className="w-3 h-3" />
+                          <span>Dispatch to Student Gmail</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 ) : (
-                  <div className="pt-2 flex items-center justify-between">
-                    <button
-                      onClick={() => {
-                        setActiveDoubtReply(d);
-                        setReplyText('');
-                      }}
-                      className="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold flex items-center gap-1.5 shadow-sm"
-                    >
-                      <MessageSquare className="w-3.5 h-3.5" />
-                      <span>Write Public Answer</span>
-                    </button>
+                  <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          setActiveDoubtReply(d);
+                          setReplyText('');
+                          setIsFeaturedFAQ(Boolean(d.isFeaturedFAQ));
+                        }}
+                        className="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold flex items-center gap-1.5 shadow-sm"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>Resolve Doubt</span>
+                      </button>
+
+                      <button
+                        onClick={() => toggleDoubtFeatured(d.id)}
+                        className="px-3 py-1.5 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-purple-500/30 text-purple-300 text-xs font-mono transition-colors"
+                      >
+                        {d.isFeaturedFAQ ? "Remove FAQ" : "Mark as FAQ"}
+                      </button>
+                    </div>
 
                     <button
                       onClick={() => updateDoubtStatus(d.id, 'answered')}
@@ -1119,14 +1132,21 @@ export const AdminPortal = () => {
       {/* ----------------------------------------------------------- */}
       {activeDoubtReply && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative max-w-lg w-full glass-panel p-6 rounded-3xl border border-purple-500/40 shadow-2xl bg-[#0a0d16] space-y-4">
+          <div className="relative max-w-lg w-full glass-panel p-6 sm:p-7 rounded-3xl border border-purple-500/40 shadow-2xl bg-[#0a0d16] space-y-4">
             <h3 className="font-display font-bold text-base text-white">
-              Answer Student Ticket: {activeDoubtReply.id}
+              Resolve Student Inquiry: #{activeDoubtReply.id}
             </h3>
             
-            <div className="p-3.5 rounded-xl bg-purple-950/30 border border-purple-500/30 text-xs font-mono text-slate-300">
-              <strong className="block text-white mb-1">{activeDoubtReply.subject}</strong>
-              <p className="font-sans">{activeDoubtReply.query}</p>
+            <div className="p-3.5 rounded-xl bg-purple-950/30 border border-purple-500/30 text-xs font-mono text-slate-300 space-y-1.5">
+              <div className="flex items-center justify-between text-purple-300">
+                <span>Student: <strong className="text-white">{activeDoubtReply.studentName || 'Student'}</strong></span>
+                <span className="flex items-center gap-1 text-cyan-400 font-mono">
+                  <Mail className="w-3 h-3" />
+                  <span>{activeDoubtReply.email}</span>
+                </span>
+              </div>
+              <strong className="block text-white pt-1">{activeDoubtReply.subject}</strong>
+              <p className="font-sans text-slate-300 leading-relaxed">{activeDoubtReply.query}</p>
             </div>
 
             <form onSubmit={handleSendDoubtReply} className="space-y-4 text-xs font-mono">
@@ -1146,31 +1166,61 @@ export const AdminPortal = () => {
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Official Response *</label>
+                <label className="block text-slate-300 mb-1">Official Resolution *</label>
                 <textarea
                   rows={4}
                   required
-                  placeholder="Type clear resolution or guidance here..."
+                  placeholder="Type clear resolution, steps, or code guidance here..."
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500 font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-purple-500 font-sans leading-relaxed"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveDoubtReply(null)}
-                  className="px-4 py-2 rounded-xl bg-white/10 text-slate-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold"
-                >
-                  Send & Publish Answer
-                </button>
+              {/* Public FAQ Board Toggle vs Private Direct Delivery */}
+              <div className="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 flex items-center justify-between gap-3">
+                <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-white">
+                  <input
+                    type="checkbox"
+                    checked={isFeaturedFAQ}
+                    onChange={(e) => setIsFeaturedFAQ(e.target.checked)}
+                    className="rounded accent-purple-600 w-4 h-4 cursor-pointer"
+                  />
+                  <span className="font-semibold">Feature on Public FAQ Board</span>
+                </label>
+                <span className="text-[10px] text-slate-400">
+                  {isFeaturedFAQ ? "Visible on public FAQ tracker" : "Private (sent directly to Gmail)"}
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+                {activeDoubtReply.email && (
+                  <a
+                    href={`mailto:${activeDoubtReply.email}?subject=${encodeURIComponent(`[AgentBlazer Club] Answer to Doubt #${activeDoubtReply.id}: ${activeDoubtReply.subject || 'Student Query'}`)}&body=${encodeURIComponent(`Dear Student,\n\nRegarding your doubt:\n"${activeDoubtReply.query}"\n\n-----------------------------\nCoordinator Resolution (${repliedBy}):\n${replyText}\n-----------------------------\n\nBest regards,\nAgentBlazer Club Leadership\nDept. of Computer Science & Engineering\nSt Joseph Engineering College`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-2 rounded-xl bg-purple-950/60 hover:bg-purple-900 border border-purple-500/40 text-purple-300 text-xs flex items-center gap-1.5 transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Open in Gmail Client</span>
+                  </a>
+                )}
+
+                <div className="flex items-center gap-2 ml-auto">
+                  <button
+                    type="button"
+                    onClick={() => setActiveDoubtReply(null)}
+                    className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold shadow-md transition-all"
+                  >
+                    Save & Resolve
+                  </button>
+                </div>
               </div>
             </form>
           </div>

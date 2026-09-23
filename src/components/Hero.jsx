@@ -1,7 +1,7 @@
 import React from 'react';
 import { useClub } from '../context/ClubContext';
 import agentblazerLogo from '../assets/agentblazer-logo.png';
-import { Sparkles, ArrowRight, Bot, Calendar, UserPlus, HelpCircle } from 'lucide-react';
+import { Sparkles, ArrowRight, Bot, Calendar, HelpCircle } from 'lucide-react';
 
 export const Hero = () => {
   const { siteContent } = useClub();
@@ -58,7 +58,7 @@ export const Hero = () => {
                 onClick={() => scrollTo('about-club')}
                 className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-medium text-sm transition-all shadow-lg hover:shadow-neon-cyan active:scale-95"
               >
-                <span>About Club & Pillars</span>
+                <span>Inauguration & Council</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -71,35 +71,11 @@ export const Hero = () => {
               </button>
 
               <button
-                onClick={() => scrollTo('join-connect-section')}
-                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-950/40 dark:hover:bg-cyan-900/50 border border-cyan-200 dark:border-cyan-500/30 text-cyan-800 dark:text-cyan-300 text-sm font-mono transition-all"
-              >
-                <UserPlus className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-                <span>Join Club</span>
-              </button>
-
-              <button
                 onClick={() => scrollTo('ask-doubt-section')}
                 className="flex items-center gap-2 px-4 py-3 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-500/30 text-purple-700 dark:text-purple-300 text-sm font-mono transition-all"
               >
                 <HelpCircle className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                <span>Ask Doubt</span>
-              </button>
-            </div>
-
-            {/* Live Club Notice Card */}
-            <div className="p-3.5 rounded-xl bg-slate-100/90 dark:bg-black/40 border border-purple-300/60 dark:border-purple-500/30 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="text-slate-800 dark:text-slate-300 font-semibold">Active Intake:</span>
-                <span className="text-slate-500 dark:text-slate-400">Academic Year 2025–2026 Student Membership Open</span>
-              </div>
-              <button
-                onClick={() => scrollTo('join-connect-section')}
-                className="text-purple-700 dark:text-cyan-300 font-bold hover:underline flex items-center gap-1"
-              >
-                <span>Apply Now</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>Ask a Doubt</span>
               </button>
             </div>
 

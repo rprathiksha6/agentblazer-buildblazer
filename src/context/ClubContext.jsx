@@ -349,13 +349,14 @@ export const ClubProvider = ({ children }) => {
       adminReply: null,
       repliedAt: null,
       repliedBy: null,
+      isFeaturedFAQ: false, // Default private; answer emailed directly to student Gmail
       ...doubt
     };
     setDoubts(prev => [newDoubt, ...prev]);
     return newDoubt;
   };
 
-  const replyToDoubt = (id, replyText, repliedBy = 'Coordinator') => {
+  const replyToDoubt = (id, replyText, repliedBy = 'Coordinator', isFeaturedFAQ = undefined) => {
     setDoubts(prev => prev.map(d => {
       if (d.id === id) {
         return {
@@ -363,11 +364,16 @@ export const ClubProvider = ({ children }) => {
           status: 'answered',
           adminReply: replyText,
           repliedAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
-          repliedBy
+          repliedBy,
+          isFeaturedFAQ: isFeaturedFAQ !== undefined ? isFeaturedFAQ : (d.isFeaturedFAQ ?? false)
         };
       }
       return d;
     }));
+  };
+
+  const toggleDoubtFeatured = (id) => {
+    setDoubts(prev => prev.map(d => d.id === id ? { ...d, isFeaturedFAQ: !d.isFeaturedFAQ } : d));
   };
 
   const updateDoubtStatus = (id, status) => {
@@ -441,6 +447,7 @@ export const ClubProvider = ({ children }) => {
       doubts,
       addDoubt,
       replyToDoubt,
+      toggleDoubtFeatured,
       updateDoubtStatus,
       memberships,
       addMembershipApplication,

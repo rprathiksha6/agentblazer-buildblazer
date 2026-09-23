@@ -39,11 +39,12 @@ export const INITIAL_DOUBTS = [
     category: "Workshops & Hands-on Labs",
     subject: "Prerequisites for Autonomous Agents Workshop",
     query: "Do we need prior experience with LangChain or Python to attend the upcoming Autonomous Agents Hands-on Workshop?",
-    status: "answered", // pending, in-review, answered
+    status: "answered",
     adminReply: "No advanced prerequisites are required! A foundational knowledge of Python and APIs is sufficient. Our mentors will guide you from scratch.",
     submittedAt: "2026-09-22 14:30",
     repliedAt: "2026-09-22 16:15",
-    repliedBy: "Stevin Dsouza (Tech Lead)"
+    repliedBy: "Stevin Dsouza (Tech Lead)",
+    isFeaturedFAQ: true
   },
   {
     id: "DBT-1042",
@@ -59,7 +60,8 @@ export const INITIAL_DOUBTS = [
     adminReply: null,
     submittedAt: "2026-09-22 18:45",
     repliedAt: null,
-    repliedBy: null
+    repliedBy: null,
+    isFeaturedFAQ: false
   },
   {
     id: "DBT-1043",
@@ -75,7 +77,8 @@ export const INITIAL_DOUBTS = [
     adminReply: "Yes, active club members receive special Trailhead org credentials with Agentforce features enabled for experiential learning.",
     submittedAt: "2026-09-21 20:10",
     repliedAt: "2026-09-22 09:20",
-    repliedBy: "Frenny Saldanha (Resource Head)"
+    repliedBy: "Frenny Saldanha (Resource Head)",
+    isFeaturedFAQ: true
   }
 ];
 

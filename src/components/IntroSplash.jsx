@@ -1,43 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { useClub } from '../context/ClubContext';
 import agentblazerLogo from '../assets/agentblazer-logo.png';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export const IntroSplash = () => {
   const { finishIntro } = useClub();
   const [lettersVisible, setLettersVisible] = useState(0);
-  const [birdPosition, setBirdPosition] = useState(-5);
+  const [birdPosition, setBirdPosition] = useState(-8);
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   const titleLetters = ["A", "G", "E", "N", "T", "B", "L", "A", "Z", "E", "R"];
 
   useEffect(() => {
-    // Smooth flight of the falcon gliding across the screen from left to right
+    // Clean flight of the falcon gliding across overhead
     const flightInterval = setInterval(() => {
       setBirdPosition((prev) => {
         if (prev >= 115) {
           clearInterval(flightInterval);
           return 115;
         }
-        return prev + 2.2;
+        return prev + 2.5;
       });
-    }, 40);
+    }, 35);
 
-    // Letter-by-letter reveal synchronized with the falcon's flight
+    // Letter-by-letter reveal synchronized with the falcon
     const letterTimers = titleLetters.map((_, index) => {
       return setTimeout(() => {
         setLettersVisible((prev) => Math.max(prev, index + 1));
-      }, 350 + index * 150);
+      }, 250 + index * 120);
     });
 
-    // Auto transition to live website after 2.9s
+    // Auto transition to live website after 2.3s
     const fadeTimer = setTimeout(() => {
       setIsFadingOut(true);
-    }, 2900);
+    }, 2300);
 
     const finishTimer = setTimeout(() => {
       finishIntro();
-    }, 3500);
+    }, 2800);
 
     return () => {
       clearInterval(flightInterval);
@@ -47,15 +47,8 @@ export const IntroSplash = () => {
     };
   }, []);
 
-  const handleSkip = () => {
-    setIsFadingOut(true);
-    setTimeout(() => {
-      finishIntro();
-    }, 300);
-  };
-
   return (
-    <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#04060b] text-white overflow-hidden transition-all duration-700 ${
+    <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#04060b] text-white overflow-hidden transition-all duration-600 ${
       isFadingOut ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
     }`}>
       
@@ -65,34 +58,19 @@ export const IntroSplash = () => {
       {/* Deep Atmospheric Nebulas */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-gradient-to-tr from-purple-700/20 via-pink-600/10 to-cyan-400/20 blur-[130px] pointer-events-none animate-pulse"></div>
 
-      {/* Top Bar with Skip Intro */}
-      <div className="absolute top-6 right-6 z-40">
-        <button
-          onClick={handleSkip}
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-mono text-slate-300 hover:text-white transition-all backdrop-blur-md active:scale-95 shadow-md"
-        >
-          <span>Skip Intro</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
-
       {/* ------------------------------------------------------------- */}
-      {/* SOARING FALCON GLIDING ACROSS THE HORIZON */}
+      {/* SOARING FALCON GLIDING CLEANLY ACROSS OVERHEAD */}
       {/* ------------------------------------------------------------- */}
       <div 
-        className="absolute top-[30%] pointer-events-none transition-all duration-75 ease-out z-30"
+        className="absolute top-[28%] pointer-events-none transition-all duration-75 ease-out z-30"
         style={{
           left: `${birdPosition}%`,
-          transform: `translate(-50%, -50%) rotate(${Math.sin(birdPosition * 0.08) * 8}deg)`
+          transform: `translate(-50%, -50%) rotate(${Math.sin(birdPosition * 0.08) * 6}deg)`
         }}
       >
         <div className="relative">
-          {/* Luminous Particle Wake */}
-          <div className="absolute -left-24 top-1/2 -translate-y-1/2 w-32 h-2 rounded-full bg-gradient-to-r from-transparent via-cyan-400/80 to-purple-400/90 blur-[2px]"></div>
-          <div className="absolute -left-16 top-1/2 -translate-y-1/2 w-20 h-5 rounded-full bg-purple-500/40 blur-md"></div>
-
-          {/* Aerodynamic Falcon Crest SVG */}
-          <svg className="w-16 h-16 sm:w-20 sm:h-20 text-cyan-300 drop-shadow-[0_0_18px_rgba(6,182,212,0.95)]" viewBox="0 0 64 64" fill="currentColor">
+          {/* Aerodynamic Falcon Crest SVG (Clean, no light trail streak) */}
+          <svg className="w-16 h-16 sm:w-20 sm:h-20 text-cyan-300 drop-shadow-[0_0_12px_rgba(6,182,212,0.85)]" viewBox="0 0 64 64" fill="currentColor">
             <path d="M32 6 L35 22 L48 10 L44 26 L58 20 L48 34 L62 38 L42 42 L48 54 L36 46 L32 58 L28 46 L16 54 L22 42 L2 38 L16 34 L6 20 L20 26 L16 10 L29 22 Z" opacity="0.95" />
             <circle cx="32" cy="22" r="3" fill="#ffffff" />
           </svg>
@@ -118,10 +96,10 @@ export const IntroSplash = () => {
           {titleLetters.map((letter, idx) => (
             <span
               key={idx}
-              className={`font-display font-extrabold text-3xl sm:text-6xl md:text-7xl tracking-wider transition-all duration-500 transform ${
+              className={`font-display font-extrabold text-3xl sm:text-6xl md:text-7xl tracking-wider transition-all duration-400 transform ${
                 idx < lettersVisible
-                  ? 'opacity-100 translate-y-0 scale-100 text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-200 to-purple-400 drop-shadow-[0_0_22px_rgba(168,85,247,0.75)]'
-                  : 'opacity-0 translate-y-8 scale-75'
+                  ? 'opacity-100 translate-y-0 scale-100 text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-200 to-purple-400 drop-shadow-[0_0_20px_rgba(168,85,247,0.7)]'
+                  : 'opacity-0 translate-y-6 scale-80'
               }`}
             >
               {letter}
@@ -130,10 +108,10 @@ export const IntroSplash = () => {
         </div>
 
         {/* Subtitle Pill and Department Line */}
-        <div className={`space-y-2 transition-all duration-700 delay-300 ${lettersVisible >= 7 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className={`space-y-2 transition-all duration-700 delay-200 ${lettersVisible >= 7 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/60 border border-purple-500/40 text-purple-300 font-mono text-xs shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-spin" />
-            <span>COLLEGIATE AUTONOMOUS AI COLLECTIVE</span>
+            <span>PIONEERING AUTONOMOUS & AGENTIC AI</span>
           </div>
           <p className="text-xs sm:text-sm font-mono text-slate-400">
             Department of Computer Science & Engineering • St Joseph Engineering College

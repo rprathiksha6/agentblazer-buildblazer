@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useClub } from '../context/ClubContext';
 import agentblazerLogo from '../assets/agentblazer-logo.png';
-import { Bell, ShieldCheck, Terminal, Menu, X, ArrowRight, Sun, Moon, Play } from 'lucide-react';
+import { Bell, ShieldCheck, Terminal, Menu, X, ArrowRight, Sun, Moon } from 'lucide-react';
 
 export const Navbar = ({ onOpenNotifs }) => {
-  const { theme, toggleTheme, accentColor, setAccentColor, portalView, setPortalView, unreadNotifCount, triggerReplayIntro } = useClub();
+  const { theme, toggleTheme, portalView, setPortalView, unreadNotifCount } = useClub();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -81,40 +81,6 @@ export const Navbar = ({ onOpenNotifs }) => {
           {/* Action Tools: Replay Intro, Theme Palette, Light/Dark Switch, Notifications, Admin Switch */}
           <div className="flex items-center gap-2 sm:gap-2.5">
             
-            {/* Replay Falcon / Word Intro */}
-            <button
-              onClick={triggerReplayIntro}
-              title="Replay Soaring AgentBlazer Intro"
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-950/40 hover:bg-purple-200 dark:hover:bg-purple-900/60 border border-purple-300 dark:border-purple-500/30 text-purple-700 dark:text-purple-300 text-xs font-mono transition-all group"
-            >
-              <Play className="w-3 h-3 text-cyan-500 fill-cyan-500 group-hover:scale-110 transition-transform" />
-              <span className="text-[11px]">Intro</span>
-            </button>
-
-            {/* Curated Theme Accent Selector */}
-            <div className="hidden md:flex items-center gap-1.5 p-1 rounded-xl bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10" title="Curated Theme Accent">
-              <button
-                onClick={() => setAccentColor('violet')}
-                title="Cyber Violet (AgentBlazer Signature)"
-                className={`w-3.5 h-3.5 rounded-full bg-purple-500 transition-all ${accentColor === 'violet' ? 'ring-2 ring-purple-400 scale-125' : 'opacity-60 hover:opacity-100'}`}
-              />
-              <button
-                onClick={() => setAccentColor('sapphire')}
-                title="Deep Sapphire (Oceanic AI / Enterprise)"
-                className={`w-3.5 h-3.5 rounded-full bg-sky-400 transition-all ${accentColor === 'sapphire' ? 'ring-2 ring-sky-300 scale-125' : 'opacity-60 hover:opacity-100'}`}
-              />
-              <button
-                onClick={() => setAccentColor('emerald')}
-                title="Quantum Emerald (Terminal Cyber)"
-                className={`w-3.5 h-3.5 rounded-full bg-emerald-500 transition-all ${accentColor === 'emerald' ? 'ring-2 ring-emerald-300 scale-125' : 'opacity-60 hover:opacity-100'}`}
-              />
-              <button
-                onClick={() => setAccentColor('amber')}
-                title="Solar Amber (Gold Blaze)"
-                className={`w-3.5 h-3.5 rounded-full bg-amber-500 transition-all ${accentColor === 'amber' ? 'ring-2 ring-amber-300 scale-125' : 'opacity-60 hover:opacity-100'}`}
-              />
-            </div>
-
             {/* Light / Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
@@ -172,17 +138,6 @@ export const Navbar = ({ onOpenNotifs }) => {
               {link.label}
             </a>
           ))}
-          <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex justify-end items-center">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                triggerReplayIntro();
-              }}
-              className="text-xs font-mono text-purple-600 dark:text-purple-400 flex items-center gap-1"
-            >
-              <Play className="w-3 h-3" /> Replay Intro
-            </button>
-          </div>
         </div>
       )}
     </header>

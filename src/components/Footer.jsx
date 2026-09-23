@@ -1,12 +1,9 @@
 import React from 'react';
 import agentblazerLogo from '../assets/agentblazer-logo.png';
 import { CLUB_META } from '../data/clubData';
-import { useClub } from '../context/ClubContext';
-import { Mail, MapPin, Shield, Play, Sparkles, Terminal, ChevronRight } from 'lucide-react';
+import { Mail, MapPin, Shield, Sparkles, Terminal, ChevronRight } from 'lucide-react';
 
 export const Footer = () => {
-  const { triggerReplayIntro } = useClub();
-
   return (
     <footer className="border-t border-slate-200 dark:border-white/10 bg-slate-900 text-slate-400 py-16 relative overflow-hidden transition-colors">
       
@@ -41,17 +38,6 @@ export const Footer = () => {
                 <span>{CLUB_META.email}</span>
               </div>
             </div>
-
-            {/* Replay Intro Animation Button */}
-            <div className="pt-2">
-              <button
-                onClick={triggerReplayIntro}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-500/40 text-purple-300 hover:text-white transition-all text-xs font-mono group"
-              >
-                <Play className="w-3.5 h-3.5 text-cyan-400 fill-cyan-400 group-hover:scale-110 transition-transform" />
-                <span>Replay Soaring Intro Animation</span>
-              </button>
-            </div>
           </div>
 
           {/* Col 2: Navigation & Tracks */}
@@ -63,7 +49,7 @@ export const Footer = () => {
               <li>
                 <a href="#about-club" className="hover:text-cyan-300 transition-colors flex items-center gap-1.5">
                   <ChevronRight className="w-3 h-3 text-purple-400" />
-                  About AgentBlazer & 4 Pillars
+                  Inauguration & Mentorship Council
                 </a>
               </li>
               <li>

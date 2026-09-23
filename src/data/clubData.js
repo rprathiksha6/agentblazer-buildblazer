@@ -26,35 +26,35 @@ export const CLUB_META = {
 export const HONORED_GUESTS = [
   {
     name: "Mr. Santosh Rebello",
-    role: "Chief Guest & Keynote Speaker",
-    organization: "Salesforce",
-    badge: "Keynote Speaker",
+    role: "Associate Vice President",
+    organization: "Mphasis Limited",
+    badge: "CHIEF GUEST",
     initials: "SR",
-    bio: "Chief Guest at the club inauguration on August 28, 2025. Emphasized bridging the 'role–radiance gap' and exploring agentic automation within the Salesforce ecosystem."
+    bio: "Delivered keynote on 'Autonomous Agents in Enterprise IT: From Copilots to Execution Systems'."
   },
   {
     name: "Mr. Stephen Pinto",
-    role: "Guest of Honor & Technical Mentor",
-    organization: "Salesforce & SJEC Alumnus",
-    badge: "Alumni Guide",
+    role: "Director - HR & Operations",
+    organization: "Kakunje Group",
+    badge: "GUEST OF HONOR",
     initials: "SP",
-    bio: "SJEC alumnus encouraging continuous learning, open agent orchestration, and Salesforce Data Cloud solutions for enterprise-grade autonomous workflows."
+    bio: "Emphasized soft power, industry adaptability, and student leadership in rapidly evolving tech hubs."
   },
   {
     name: "Dr. Rio D'Souza",
-    role: "Patron & Presidential Address",
-    organization: "Principal, SJEC",
-    badge: "Patron",
+    role: "Principal",
+    organization: "St Joseph Engineering College",
+    badge: "PRESIDENTIAL ADDRESS",
     initials: "RD",
-    bio: "Principal of SJEC. Called on students at the club launch to seize autonomous AI growth opportunities, interdisciplinary research, and experiential engineering."
+    bio: "Stressed ethical computing, student incubation facilities, and inter-departmental collaboration."
   },
   {
     name: "Dr. Melwyn D'Souza",
-    role: "Program Chair & Department Head",
-    organization: "HOD, Computer Science & Engg",
-    badge: "Department Head",
+    role: "Dean - Academics",
+    organization: "St Joseph Engineering College",
+    badge: "SPECIAL REMARKS",
     initials: "MD",
-    bio: "Delivered the welcome address at the inauguration and actively supports curriculum modernization, competitive AI contests, and industry collaborations."
+    bio: "Outlined experiential learning and autonomous project credits for student innovators."
   }
 ];
 
