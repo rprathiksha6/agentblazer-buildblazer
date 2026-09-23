@@ -183,6 +183,49 @@ export const ClubProvider = ({ children }) => {
     localStorage.setItem('agentblazer_memberships', JSON.stringify(memberships));
   }, [memberships]);
 
+  // Synchronize state with Node.js SQLite Backend
+  useEffect(() => {
+    // 1. Synchronize Doubts
+    fetch('/api/doubts')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setDoubts(data);
+        }
+      })
+      .catch(() => {/* Offline fallback to localStorage */});
+
+    // 2. Synchronize Memberships
+    fetch('/api/memberships')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setMemberships(data);
+        }
+      })
+      .catch(() => {/* Offline fallback */});
+
+    // 3. Synchronize Announcements
+    fetch('/api/announcements')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setNotifications(data);
+        }
+      })
+      .catch(() => {/* Offline fallback */});
+
+    // 4. Synchronize Site Content (CMS)
+    fetch('/api/content')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+          setSiteContent(prev => ({ ...prev, ...data }));
+        }
+      })
+      .catch(() => {/* Offline fallback */});
+  }, []);
+
   const setTheme = (newTheme) => {
     setThemeState(newTheme);
   };
@@ -229,9 +272,26 @@ export const ClubProvider = ({ children }) => {
   };
 
   // Admin Auth functions
-  const loginAdmin = (username, password) => {
+  const loginAdmin = async (username, password) => {
     const trimUser = username.trim().toLowerCase();
     const trimPass = password.trim();
+
+    // Attempt backend login first
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: trimUser, password: trimPass })
+      });
+      if (res.ok) {
+        setAdminAuth({ isAuthenticated: true, username: trimUser });
+        setPortalViewState('admin');
+        return { success: true };
+      }
+    } catch (err) {
+      // Fallback to local credential check if server offline
+    }
+
     if (
       (trimUser === adminCredentials.username.toLowerCase() || trimUser === 'admin') &&
       (trimPass === adminCredentials.password || trimPass === 'agentblazer2026')
@@ -267,17 +327,27 @@ export const ClubProvider = ({ children }) => {
 
   // CMS Content Mutators
   const updateHeroContent = (heroData) => {
-    setSiteContent(prev => ({
-      ...prev,
-      hero: { ...prev.hero, ...heroData }
-    }));
+    setSiteContent(prev => {
+      const updated = { ...prev.hero, ...heroData };
+      fetch('/api/content/hero', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updated)
+      }).catch(() => {});
+      return { ...prev, hero: updated };
+    });
   };
 
   const updateIntroContent = (introData) => {
-    setSiteContent(prev => ({
-      ...prev,
-      intro: { ...prev.intro, ...introData }
-    }));
+    setSiteContent(prev => {
+      const updated = { ...prev.intro, ...introData };
+      fetch('/api/content/intro', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updated)
+      }).catch(() => {});
+      return { ...prev, intro: updated };
+    });
   };
 
   const updateActivity = (id, updatedFields) => {
@@ -353,6 +423,20 @@ export const ClubProvider = ({ children }) => {
       ...doubt
     };
     setDoubts(prev => [newDoubt, ...prev]);
+
+    fetch('/api/doubts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newDoubt)
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(created => {
+        if (created && created.id) {
+          setDoubts(prev => prev.map(d => d.id === newDoubt.id ? created : d));
+        }
+      })
+      .catch(() => {});
+
     return newDoubt;
   };
 
@@ -370,14 +454,37 @@ export const ClubProvider = ({ children }) => {
       }
       return d;
     }));
+
+    fetch(`/api/doubts/${id}/reply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ adminReply: replyText, repliedBy, isFeaturedFAQ })
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(updated => {
+        if (updated && updated.id) {
+          setDoubts(prev => prev.map(d => d.id === id ? updated : d));
+        }
+      })
+      .catch(() => {});
   };
 
   const toggleDoubtFeatured = (id) => {
     setDoubts(prev => prev.map(d => d.id === id ? { ...d, isFeaturedFAQ: !d.isFeaturedFAQ } : d));
+
+    fetch(`/api/doubts/${id}/toggle-faq`, {
+      method: 'PATCH'
+    }).catch(() => {});
   };
 
   const updateDoubtStatus = (id, status) => {
     setDoubts(prev => prev.map(d => d.id === id ? { ...d, status } : d));
+
+    fetch(`/api/doubts/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    }).catch(() => {});
   };
 
   // Membership functions
@@ -389,11 +496,24 @@ export const ClubProvider = ({ children }) => {
       ...app
     };
     setMemberships(prev => [newApp, ...prev]);
+
+    fetch('/api/memberships', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newApp)
+    }).catch(() => {});
+
     return newApp;
   };
 
   const updateMembershipStatus = (id, status) => {
     setMemberships(prev => prev.map(m => m.id === id ? { ...m, status } : m));
+
+    fetch(`/api/memberships/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    }).catch(() => {});
   };
 
   // Notifications
@@ -411,6 +531,12 @@ export const ClubProvider = ({ children }) => {
       ...notif
     };
     setNotifications(prev => [newNotif, ...prev]);
+
+    fetch('/api/announcements', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newNotif)
+    }).catch(() => {});
   };
 
   return (
